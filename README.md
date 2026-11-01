@@ -22,6 +22,7 @@ All analytical explanations, benchmark findings, and theoretical guides are docu
 
 | Document | Description |
 | :--- | :--- |
+| [qa_types_and_evaluation.md](file:///c:/Users/E%20N%20V%20Y/OneDrive%20-%20Ecole%20Centrale%20Casablanca/Bureau/Lab_project/qa_types_and_evaluation.md) | **QA Types Guide:** Explains why answers don't appear in text for comparison/boolean questions (Bridge vs. Comparison questions). |
 | [evidence_and_metrics_explained.md](file:///c:/Users/E%20N%20V%20Y/OneDrive%20-%20Ecole%20Centrale%20Casablanca/Bureau/Lab_project/evidence_and_metrics_explained.md) | **Evaluation Guide:** Deep dive into "Gold Evidence", "Ans Kept", and how researchers evaluate prompt compression. |
 | [terminal_output_analysis.md](file:///c:/Users/E%20N%20V%20Y/OneDrive%20-%20Ecole%20Centrale%20Casablanca/Bureau/Lab_project/terminal_output_analysis.md) | **Terminal Output Guide:** Plain-English translation of all terminal output, demystifying HuggingFace warnings and explaining the `Ans kept: False` mystery. |
 | [hotpotqa_benchmark_report.md](file:///c:/Users/E%20N%20V%20Y/OneDrive%20-%20Ecole%20Centrale%20Casablanca/Bureau/Lab_project/hotpotqa_benchmark_report.md) | **Latest Benchmark Report:** Multi-document RAG compression analytics on HotpotQA, showing the "Distractor Token Waste" problem and the two-stage adaptive architecture. |
