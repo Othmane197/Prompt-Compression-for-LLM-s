@@ -1,0 +1,7 @@
+{
+  "python.defaultInterpreterPath": "E:\\AI_Lab_Environment\\.venv\\Scripts\\python.exe",
+  "python.terminal.activateEnvironment": true,
+  "terminal.integrated.env.windows": {
+    "HF_HOME": "E:\\AI_Lab_Environment\\hf_cache"
+  }
+}

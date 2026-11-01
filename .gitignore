@@ -1,0 +1,33 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environment
+.venv/
+venv/
+env/
+ENV/
+
+# Academic / Research Documents & Papers (Keep repository strictly code & docs)
+*.pdf
+*.docx
+*.doc
+*.pptx
+*.xlsx
+*.csv
+
+# Temporary / Scratch directories
+JIIIIIIIIIIIIIIIIIIIIIIIIIIIIIRAAAAAAAAAAAAAAAAAAAA/
+scratch/
+*.log
+
+# Caches & Hugging Face local downloads
+.cache/
+hf_cache/
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
