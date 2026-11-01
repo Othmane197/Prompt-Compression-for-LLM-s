@@ -22,6 +22,7 @@ All analytical explanations, benchmark findings, and theoretical guides are docu
 
 | Document | Description |
 | :--- | :--- |
+| [evidence_and_metrics_explained.md](file:///c:/Users/E%20N%20V%20Y/OneDrive%20-%20Ecole%20Centrale%20Casablanca/Bureau/Lab_project/evidence_and_metrics_explained.md) | **Evaluation Guide:** Deep dive into "Gold Evidence", "Ans Kept", and how researchers evaluate prompt compression. |
 | [terminal_output_analysis.md](file:///c:/Users/E%20N%20V%20Y/OneDrive%20-%20Ecole%20Centrale%20Casablanca/Bureau/Lab_project/terminal_output_analysis.md) | **Terminal Output Guide:** Plain-English translation of all terminal output, demystifying HuggingFace warnings and explaining the `Ans kept: False` mystery. |
 | [hotpotqa_benchmark_report.md](file:///c:/Users/E%20N%20V%20Y/OneDrive%20-%20Ecole%20Centrale%20Casablanca/Bureau/Lab_project/hotpotqa_benchmark_report.md) | **Latest Benchmark Report:** Multi-document RAG compression analytics on HotpotQA, showing the "Distractor Token Waste" problem and the two-stage adaptive architecture. |
 | [prompt_compression_guide.md](file:///c:/Users/E%20N%20V%20Y/OneDrive%20-%20Ecole%20Centrale%20Casablanca/Bureau/Lab_project/prompt_compression_guide.md) | Comprehensive foundations on Information Theory, Perplexity, LLMLingua-1, and LLMLingua-2. |
