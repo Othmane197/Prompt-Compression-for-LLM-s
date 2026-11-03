@@ -177,44 +177,222 @@ Measures the gap between words that exist vs. words Algorithm 1 actually managed
 
 ---
 
-### Step 4: Model Training
+### Step 4: Model Training (Token Classification)
 
-Now we have a clean dataset of pairs:
-$$(\text{Prompt Text } x, \text{ Gold Labels } y \in \{0, 1\}^N)$$
-
-#### The Architecture:
-We use a pretrained **XLM-RoBERTa-large** (355 million parameters) or **mBERT** (110 million parameters) and attach a linear classification layer on top:
-
-1. **Feature Extraction:**
-   Pass the text $x$ through the Transformer encoder to get a contextual embedding vector $h_i$ for each token:
-   $$h = f_\theta(x)$$
-2. **Binary Classification Head:**
-   Project each vector $h_i$ into 2 logits (scores for [Discard, Preserve]) using a learned matrix $W$ and bias $b$:
-   $$p(x_i) = \text{Softmax}(W \cdot h_i + b)$$
-3. **Subword Pooling:**
-   If a word like `"infrastructure"` was broken by the tokenizer into `["infra", "##structure"]`, we compute the word's probability by **averaging the probabilities of its subwords**.
-4. **Loss Function:**
-   Standard Binary Cross-Entropy Loss:
-   $$\mathcal{L} = \frac{1}{N} \sum_{i=1}^N \text{CrossEntropy}(y_i, p(x_i))$$
-   Trained for 10 epochs using the Adam optimizer with learning rate $1\times 10^{-5}$.
+Once the GPT-4 distillation and filtering steps are complete, we have a clean supervised dataset of pairs:
+$$\{(\text{Text Sequence } x, \text{ Target Binary Labels } y \in \{0, 1\}^N)\}$$
+Where:
+- $y_i = 1$ means **PRESERVE** (the word is essential for meaning).
+- $y_i = 0$ means **DISCARD** (the word is redundant or syntactic filler).
 
 ---
 
-### Step 5: Test-Time Inference (Fast Compression)
+#### 4.1 What Type of Machine Learning Problem is This?
+In standard NLP, this is formulated as a **Token Classification / Sequence Tagging** task:
+- It is identical to **Named Entity Recognition (NER)** or **Part-of-Speech (POS) Tagging**.
+- Instead of predicting `[PERSON, LOCATION, ORG]`, the neural network predicts a binary decision for every single word: `[DISCARD, PRESERVE]`.
 
-When you run LLMLingua-2 on your machine, here is what happens under the hood:
+```mermaid
+flowchart LR
+    subgraph InputTokens["Input Word Sequence"]
+        W1["The"]
+        W2["quantum"]
+        W3["algorithm"]
+        W4["is"]
+        W5["fast"]
+    end
 
-Suppose you give it a prompt with $N = 100$ words and request **3x compression** ($\tau = 0.33$):
+    subgraph TransformerEncoder["Bidirectional Encoder (XLM-RoBERTa / mBERT)"]
+        direction TB
+        L1["Self-Attention Layer 1"]
+        L2["... 12/24 Layers ..."]
+        L3["Self-Attention Layer N"]
+    end
 
-1. **Calculate Budget:**
-   $$\tilde{N} = \tau \times N = 0.33 \times 100 = 33 \text{ words to keep}$$
-2. **Single Forward Pass:**
-   The entire text is fed through XLM-RoBERTa in **one single pass**. Every word gets a score $p_i = P(\text{preserve})$.
-3. **Top-$\tilde{N}$ Selection:**
-   Rank all 100 words by their $p_i$ score and pick the 33 words with the highest scores.
-4. **Restore Original Order:**
-   Sort the 33 chosen words by their original position in the text.
-5. **Output:** Return the compressed string.
+    subgraph HiddenStates["Contextual Hidden Vectors (h_i)"]
+        H1["h_1"]
+        H2["h_2"]
+        H3["h_3"]
+        H4["h_4"]
+        H5["h_5"]
+    end
+
+    subgraph Classifier["Linear Classification Head (W, b) + Softmax"]
+        C1["Linear Head"]
+        C2["Linear Head"]
+        C3["Linear Head"]
+        C4["Linear Head"]
+        C5["Linear Head"]
+    end
+
+    subgraph OutputProbabilities["P(preserve) Score"]
+        P1["P=0.08 (Discard)"]
+        P2["P=0.96 (Preserve)"]
+        P3["P=0.98 (Preserve)"]
+        P4["P=0.04 (Discard)"]
+        P5["P=0.89 (Preserve)"]
+    end
+
+    W1 --> TransformerEncoder --> H1 --> C1 --> P1
+    W2 --> TransformerEncoder --> H2 --> C2 --> P2
+    W3 --> TransformerEncoder --> H3 --> C3 --> P3
+    W4 --> TransformerEncoder --> H4 --> C4 --> P4
+    W5 --> TransformerEncoder --> H5 --> C5 --> P5
+```
+
+---
+
+#### 4.2 Why a Bidirectional Encoder instead of Causal (GPT) Model?
+
+| Model Architecture | Reading Direction | Example | Why It Matters for Compression |
+| :--- | :--- | :--- | :--- |
+| **Causal / Autoregressive** *(LLMLingua-1)* | Strictly **Left-to-Right** | GPT-2, LLaMA | When evaluating word 5, the model is **blind to word 6 through 100**. It cannot know if word 5 is introducing a crucial upcoming fact! |
+| **Bidirectional Encoder** *(LLMLingua-2)* | **Left-to-Right AND Right-to-Left** simultaneously | XLM-RoBERTa, mBERT | Evaluates each word conditioned on the **entire paragraph**. It sees both preceding and succeeding context in a single pass. |
+
+---
+
+#### 4.3 Mathematical Formulation & Tensor Operations
+
+1. **Contextual Encoding:**  
+   Given a tokenized sequence $T = (t_1, t_2, \dots, t_M)$, the pretrained Transformer encoder $f_\theta$ outputs a sequence of $d$-dimensional hidden vectors:
+   $$H = [h_1, h_2, \dots, h_M] = f_\theta(t_1, \dots, t_M) \quad \text{where } h_i \in \mathbb{R}^d$$
+   *(For `bert-base-multilingual`, $d = 768$; for `xlm-roberta-large`, $d = 1024$).*
+
+2. **Linear Classification Head:**  
+   Each token's hidden vector $h_i$ is mapped through a single linear layer with weights $W \in \mathbb{R}^{2 \times d}$ and bias $b \in \mathbb{R}^2$ to produce unnormalized logits $z_i \in \mathbb{R}^2$:
+   $$z_i = W \cdot h_i + b = [z_{i, \text{discard}}, \; z_{i, \text{preserve}}]$$
+
+3. **Probability Calculation (Softmax):**  
+   We apply a softmax over the two classes to compute the probability of preserving token $t_i$:
+   $$p_i = P(\text{preserve} \mid t_i) = \frac{e^{z_{i, \text{preserve}}}}{e^{z_{i, \text{discard}}} + e^{z_{i, \text{preserve}}}}$$
+
+---
+
+#### 4.4 The Subword-to-Word Pooling Problem (Crucial Detail)
+
+Modern tokenizers (WordPiece or Byte-Pair Encoding) split rare or complex words into **subwords**:
+$$\text{Word: "infrastructure"} \longrightarrow \text{Subwords: ["infra", "##structure"]}$$
+
+However, GPT-4 annotated binary labels on whole **words**, not subwords. How does LLMLingua-2 bridge this gap?
+
+- **During Training:**  
+  Every subword inherits the ground-truth binary label of its parent word:
+  $$\text{Label}(\text{"infrastructure"}) = 1 \implies \text{Label}(\text{"infra"}) = 1, \; \text{Label}(\text{"##structure"}) = 1$$
+
+- **During Inference (Subword Pooling):**  
+  If word $w$ consists of subwords $K_w = \{t_{w,1}, \dots, t_{w,k}\}$, the model averages their preserve probabilities to produce one robust word-level score:
+  $$P(\text{preserve} \mid w) = \frac{1}{|K_w|} \sum_{t \in K_w} P(\text{preserve} \mid t)$$
+  *Benefit:* Averaging smooths out subword noise and ensures multi-token words are treated as coherent semantic units.
+
+---
+
+#### 4.5 Loss Function & Training Optimization
+
+The model is trained using **Binary Cross-Entropy Loss** over all words in the batch:
+
+$$\mathcal{L} = -\frac{1}{N} \sum_{i=1}^N \Big[ y_i \log(p_i) + (1 - y_i) \log(1 - p_i) \Big]$$
+
+- **Optimizer:** AdamW with weight decay $0.01$.
+- **Learning Rate:** $1 \times 10^{-5}$ with a linear warmup over the first 10% of training steps.
+- **Batch Size:** 32 sequences (chunked at 512 tokens).
+- **Epochs:** 10 epochs over the distilled MeetingBank training set.
+
+---
+
+### Step 5: Test-Time Inference (How Compression Executes at Runtime)
+
+Once trained, the compressor is completely independent of GPT-4. Given **any prompt** and **any user-requested compression rate $\tau$**, compression executes through the following deterministic pipeline:
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor User as Application / User
+    participant Comp as LLMLingua-2 Compressor
+    participant Tokenizer as Encoder Tokenizer
+    participant BERT as XLM-RoBERTa / mBERT
+    participant Ranker as Top-K Filter & Reconstructor
+
+    User->>Comp: compress_prompt(text, rate=0.40)
+    Comp->>Tokenizer: Tokenize text into words & subwords
+    Tokenizer-->>Comp: Word count = 100, Subwords = 135
+    Comp->>BERT: Single bidirectional forward pass
+    BERT-->>Comp: Output contextual embeddings h_i
+    Comp->>Comp: Compute P(preserve) per word (Subword Pooling)
+    Comp->>Ranker: Words + Scores + Target Budget (K = 40 words)
+    Ranker->>Ranker: Rank words by score descending
+    Ranker->>Ranker: Pick top 40 words
+    Ranker->>Ranker: Re-sort chosen 40 words by ORIGINAL position
+    Ranker-->>User: Return compressed prompt string
+```
+
+---
+
+#### 5.1 Step-by-Step Concrete Example
+
+Suppose we input the following 10-word sentence with target rate $\tau = 0.40$ (retain 40% of words $\implies 4$ words):
+
+> **Original Input:** `"The rapid development of artificial intelligence brings remarkable scientific breakthroughs."`
+
+1. **Forward Pass & Scoring:**  
+   The model scores each word's $P(\text{preserve})$:
+
+   | Word | $P(\text{preserve})$ Score | Category |
+   | :--- | :---: | :---: |
+   | `"The"` | 0.05 | Filler article |
+   | `"rapid"` | 0.45 | Adjective |
+   | `"development"` | 0.62 | Noun |
+   | `"of"` | 0.02 | Preposition |
+   | `"artificial"` | **0.91** | Domain entity |
+   | `"intelligence"` | **0.95** | Domain entity |
+   | `"brings"` | 0.18 | Weak verb |
+   | `"remarkable"` | 0.51 | Adjective |
+   | `"scientific"` | **0.84** | Domain entity |
+   | `"breakthroughs"` | **0.97** | Crucial concept |
+
+2. **Budget Calculation:**  
+   $$\text{Budget } \tilde{N} = \tau \times N = 0.40 \times 10 = \mathbf{4 \text{ words}}$$
+
+3. **Top-$K$ Selection:**  
+   Sort words descending by score:
+   1. `"breakthroughs"` (0.97)
+   2. `"intelligence"` (0.95)
+   3. `"artificial"` (0.91)
+   4. `"scientific"` (0.84)
+   *(Remaining 6 words fall below the cutoff and are discarded).*
+
+4. **Reconstruct Original Word Order:**  
+   Sort the 4 chosen words by their original index in the text:
+   - Index 4: `"artificial"`
+   - Index 5: `"intelligence"`
+   - Index 8: `"scientific"`
+   - Index 9: `"breakthroughs"`
+
+5. **Final Compressed Output:**  
+   > `"artificial intelligence scientific breakthroughs"`
+
+Notice that grammar words were dropped, but the **entire semantic core** was preserved with zero hallucination!
+
+---
+
+#### 5.2 Special Inference Safeguards in LLMLingua-2
+
+To make the compressed prompt usable by downstream LLMs, LLMLingua-2 includes three practical engineering safeguards:
+
+1. **Forced Tokens (`force_tokens`):**  
+   Certain tokens should **never be deleted**, regardless of their model score:
+   - Paragraph breaks (`\n`)
+   - Sentence boundaries (`.`, `?`, `!`)
+   - Essential punctuation (`:`, `-`)  
+   *Without forced tokens, multiple paragraphs would merge into one unreadable run-on block.*
+
+2. **Drop Consecutive (`drop_consecutive=True`):**  
+   If multiple punctuation marks or repetitive tokens cluster together (e.g. `"... , , ."`), the post-processor cleans them into single clean separators.
+
+3. **Chunk-Wise Processing for Long Prompts (>512 Tokens):**  
+   BERT models cannot process sequences longer than 512 tokens at once. When a prompt contains 2,000 tokens:
+   - The compressor splits the text into sliding windows of $\le 512$ tokens ending at sentence boundaries.
+   - Runs inference across the chunks in batches.
+   - Reconstructs the complete compressed text seamlessly.
 
 ---
 
@@ -319,38 +497,52 @@ class LLMLingua2Compressor(nn.Module):
 
 ---
 
-### Part 3: Test-Time Inference Function
+### Part 3: Test-Time Inference with Subword Pooling
 
 ```python
-def compress_prompt_inference(model, tokenizer, prompt_text, target_rate=0.4, device="cpu"):
+def compress_prompt_with_word_pooling(model, tokenizer, prompt_text, target_rate=0.4, device="cpu"):
     """
-    Compresses a prompt using a single forward pass:
-    1. Feeds prompt to encoder
-    2. Takes P(preserve)
-    3. Retains top tokens maintaining original sequence order
+    Compresses prompt text using word-level subword pooling and top-K selection:
+    1. Forward pass through encoder to get subword probabilities
+    2. Pool subword probabilities to calculate average P(preserve) per word
+    3. Retain top-K words by score
+    4. Reconstruct prompt preserving original sequence order
     """
     model.eval()
-    tokens = tokenizer(prompt_text, return_offsets_mapping=True, return_tensors="pt").to(device)
-    input_ids = tokens.input_ids
-    attention_mask = tokens.attention_mask
-
+    words = prompt_text.split()
+    
+    # Tokenize words into subwords tracking word-to-token offsets
+    encoding = tokenizer(
+        words,
+        is_split_into_words=True,
+        return_tensors="pt"
+    ).to(device)
+    
     with torch.no_grad():
-        probs = model(input_ids, attention_mask)
-        # Probability of class 1 (preserve)
-        preserve_probs = probs[0, :, 1]
+        probs = model(encoding.input_ids, encoding.attention_mask)
+        # Class 1 = P(preserve)
+        subword_preserve_probs = probs[0, :, 1].cpu().numpy()
 
-    # Calculate token budget
-    seq_len = input_ids.size(1)
-    k = max(1, int(seq_len * target_rate))
+    # Subword-to-Word Pooling: Average subword scores per word
+    word_ids = encoding.word_ids(batch_index=0)
+    word_scores = {}
+    for subword_idx, w_id in enumerate(word_ids):
+        if w_id is not None:  # Exclude [CLS], [SEP]
+            word_scores.setdefault(w_id, []).append(subword_preserve_probs[subword_idx])
 
-    # Pick top k indices with highest preservation probabilities
-    top_indices = torch.topk(preserve_probs, k=k).indices
-    sorted_indices = torch.sort(top_indices).values
+    # Average subword scores to get final word-level probability
+    avg_word_scores = [np.mean(word_scores[i]) for i in range(len(words))]
 
-    # Decode preserved tokens back to text
-    kept_input_ids = input_ids[0, sorted_indices]
-    compressed_text = tokenizer.decode(kept_input_ids, skip_special_tokens=True)
-    return compressed_text
+    # Calculate word budget
+    budget_k = max(1, int(len(words) * target_rate))
+
+    # Select top-K words by score
+    ranked_indices = sorted(range(len(words)), key=lambda i: avg_word_scores[i], reverse=True)
+    chosen_indices = sorted(ranked_indices[:budget_k])  # Restore original order
+
+    # Reconstruct compressed string
+    compressed_words = [words[i] for i in chosen_indices]
+    return " ".join(compressed_words)
 ```
 
 ---
