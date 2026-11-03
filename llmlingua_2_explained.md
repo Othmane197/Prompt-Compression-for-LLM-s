@@ -334,13 +334,13 @@ $$\mathcal{L} = -\frac{1}{N} \sum_{i=1}^N \Big[ y_i \log(p_i) + (1 - y_i) \log(1
 #### 4.4 The Subword-to-Word Pooling Problem (Crucial Detail)
 
 Modern tokenizers (WordPiece or Byte-Pair Encoding) split rare or complex words into **subwords**:
-$$\text{Word: "infrastructure"} \longrightarrow \text{Subwords: ["infra", "##structure"]}$$
+> `Word: "infrastructure"` $\longrightarrow$ `Subwords: ["infra", "##structure"]`
 
 However, GPT-4 annotated binary labels on whole **words**, not subwords. How does LLMLingua-2 bridge this gap?
 
 - **During Training:**  
   Every subword inherits the ground-truth binary label of its parent word:
-  $$\text{Label}(\text{"infrastructure"}) = 1 \implies \text{Label}(\text{"infra"}) = 1, \; \text{Label}(\text{"##structure"}) = 1$$
+  > If `Label("infrastructure") = 1` $\implies$ `Label("infra") = 1` and `Label("##structure") = 1`
 
 - **During Inference (Subword Pooling):**  
   If word $w$ consists of subwords $K_w = \{t_{w,1}, \dots, t_{w,k}\}$, the model averages their preserve probabilities to produce one robust word-level score:
