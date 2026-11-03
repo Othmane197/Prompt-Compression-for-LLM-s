@@ -292,7 +292,13 @@ $$H = [h_1, h_2, \dots, h_M] = f_\theta(t_1, t_2, \dots, t_M) \quad \text{where 
 $$z_i = W \cdot h_i + b = [z_{i, \text{discard}}, \; z_{i, \text{preserve}}]$$
 
 * **What it means in plain English:**  
-  We take the 768-number vector $h_i$ and multiply it by a learned weight matrix $W \in \mathbb{R}^{2 \times 768}$, then add a bias vector $b \in \mathbb{R}^2$.
+  We take the 768-number vector $h_i$ produced by the bidirectional encoder and multiply it by a learned weight matrix $W \in \mathbb{R}^{2 \times 768}$, then add a bias vector $b \in \mathbb{R}^2$.
+* **How is the $W$ Matrix Learned?**  
+  > **Yes, exactly:** $W$ is learned on the **distilled GPT-4 dataset**!  
+  > 1. You start with a pretrained bidirectional encoder (XLM-RoBERTa / mBERT).  
+  > 2. You attach this new, randomly initialized classification layer ($W, b$) on top.  
+  > 3. During training, the encoder produces contextual vector $h_i$, and $W$ maps it to `[discard, preserve]`.  
+  > 4. Backpropagation compares the prediction against GPT-4's distilled keep/drop labels ($y_i \in \{0, 1\}$) and updates $W$ (as well as fine-tuning the encoder weights) using AdamW.
 * **Toy Numerical Example:**  
   Suppose for the word `"quantum"`:
   - Row 0 of $W$ calculates the **Discard Logit**: $z_{\text{discard}} = -1.5$
