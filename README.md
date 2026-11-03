@@ -22,6 +22,7 @@ All analytical explanations, benchmark findings, and theoretical guides are docu
 
 | Document | Description |
 | :--- | :--- |
+| [colab_replication_analysis.md](file:///c:/Users/E%20N%20V%20Y/OneDrive%20-%20Ecole%20Centrale%20Casablanca/Bureau/Lab_project/colab_replication_analysis.md) | **Colab Reproduction Study:** In-depth analysis of the MeetingBank replication notebook, testing LLMLingua-2 claims on Mistral-7B. |
 | [metrics_critique_and_refinement.md](file:///c:/Users/E%20N%20V%20Y/OneDrive%20-%20Ecole%20Centrale%20Casablanca/Bureau/Lab_project/metrics_critique_and_refinement.md) | **Metrics Critique:** Why naive answer checking fails on boolean questions, and why type-gated entity checks are necessary. |
 | [qa_types_and_evaluation.md](file:///c:/Users/E%20N%20V%20Y/OneDrive%20-%20Ecole%20Centrale%20Casablanca/Bureau/Lab_project/qa_types_and_evaluation.md) | **QA Types Guide:** Explains why answers don't appear in text for comparison/boolean questions (Bridge vs. Comparison questions). |
 | [evidence_and_metrics_explained.md](file:///c:/Users/E%20N%20V%20Y/OneDrive%20-%20Ecole%20Centrale%20Casablanca/Bureau/Lab_project/evidence_and_metrics_explained.md) | **Evaluation Guide:** Deep dive into "Gold Evidence", "Ans Kept", and how researchers evaluate prompt compression. |
