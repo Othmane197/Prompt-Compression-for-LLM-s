@@ -26,6 +26,7 @@ All theoretical guides, benchmark reports, and replication analyses are organize
 - [llmlingua_2_explained.md](docs/guides/llmlingua_2_explained.md): Data distillation, bidirectional token classification, subword pooling, and inference (ACL Findings 2024).
 
 ### 📊 Benchmark Reports (`docs/benchmarks/`)
+- [experiments_log.md](docs/benchmarks/experiments_log.md): Complete chronological log of all tests conducted, results tables, and copy-paste run commands.
 - [hotpotqa_benchmark_report.md](docs/benchmarks/hotpotqa_benchmark_report.md): Multi-document RAG compression benchmark results across 4 compression rates on NVIDIA MX150.
 - [hotpotqa_evaluation_guide.md](docs/benchmarks/hotpotqa_evaluation_guide.md): Guide to gold evidence metrics, bridge vs. comparison question types, and entity fragility.
 
