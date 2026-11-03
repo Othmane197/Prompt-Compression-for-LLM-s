@@ -22,6 +22,7 @@ All analytical explanations, benchmark findings, and theoretical guides are docu
 
 | Document | Description |
 | :--- | :--- |
+| [linear_layer_vs_regression.md](file:///c:/Users/E%20N%20V%20Y/OneDrive%20-%20Ecole%20Centrale%20Casablanca/Bureau/Lab_project/linear_layer_vs_regression.md) | **ML Foundations:** Clarifies why LLMLingua-2 uses a Linear Classification Head with Softmax (Logistic Regression) rather than Linear Regression. |
 | [colab_pipeline_explained.md](file:///c:/Users/E%20N%20V%20Y/OneDrive%20-%20Ecole%20Centrale%20Casablanca/Bureau/Lab_project/colab_pipeline_explained.md) | **Pipeline Guide:** Maps the 4-stage pipeline implemented in the peer's Colab notebook (from compression to Mistral inference). |
 | [comparison_with_peer_benchmark.md](file:///c:/Users/E%20N%20V%20Y/OneDrive%20-%20Ecole%20Centrale%20Casablanca/Bureau/Lab_project/comparison_with_peer_benchmark.md) | **Peer Comparison Study:** Contrasting your HotpotQA diagnostic benchmark with the peer's MeetingBank Colab replication. |
 | [colab_replication_analysis.md](file:///c:/Users/E%20N%20V%20Y/OneDrive%20-%20Ecole%20Centrale%20Casablanca/Bureau/Lab_project/colab_replication_analysis.md) | **Colab Reproduction Study:** In-depth analysis of the MeetingBank replication notebook, testing LLMLingua-2 claims on Mistral-7B. |
