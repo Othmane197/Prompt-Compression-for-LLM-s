@@ -192,9 +192,36 @@ In standard NLP, this is formulated as a **Token Classification / Sequence Taggi
 - It is identical to **Named Entity Recognition (NER)** or **Part-of-Speech (POS) Tagging**.
 - Instead of predicting `[PERSON, LOCATION, ORG]`, the neural network predicts a binary decision for every single word: `[DISCARD, PRESERVE]`.
 
+---
+
+#### Visual Architecture Diagram
+
+```
+[1. Input Words]        "The"        "quantum"      "algorithm"       "is"          "fast"
+                          │              │               │              │             │
+                          ▼              ▼               ▼              ▼             ▼
+[2. Bidirectional   ┌────────────────────────────────────────────────────────────────────────┐
+   Transformer]     │  12 to 24 Layers of Bidirectional Self-Attention (XLM-RoBERTa / mBERT) │
+                    │     (Every word sees all other words simultaneously: past & future)    │
+                    └────────────────────────────────────────────────────────────────────────┘
+                          │              │               │              │             │
+                          ▼              ▼               ▼              ▼             ▼
+[3. Context Vectors]     h_1            h_2             h_3            h_4           h_5
+                     (768 numbers)  (768 numbers)   (768 numbers)  (768 numbers) (768 numbers)
+                          │              │               │              │             │
+                          ▼              ▼               ▼              ▼             ▼
+[4. Classifier Head]┌──────────┐   ┌──────────┐    ┌──────────┐   ┌──────────┐  ┌──────────┐
+   (W * h + b)      │Linear (W)│   │Linear (W)│    │Linear (W)│   │Linear (W)│  │Linear (W)│
+                    └──────────┘   └──────────┘    └──────────┘   └──────────┘  └──────────┘
+                          │              │               │              │             │
+                          ▼              ▼               ▼              ▼             ▼
+[5. Probabilities]    P(Keep)=0.08   P(Keep)=0.96    P(Keep)=0.98   P(Keep)=0.04  P(Keep)=0.89
+                         (DROP)         (KEEP)          (KEEP)         (DROP)        (KEEP)
+```
+
 ```mermaid
-flowchart LR
-    subgraph InputTokens["Input Word Sequence"]
+flowchart TD
+    subgraph S1 ["1. Input Words"]
         W1["The"]
         W2["quantum"]
         W3["algorithm"]
@@ -202,42 +229,37 @@ flowchart LR
         W5["fast"]
     end
 
-    subgraph TransformerEncoder["Bidirectional Encoder (XLM-RoBERTa / mBERT)"]
-        direction TB
-        L1["Self-Attention Layer 1"]
-        L2["... 12/24 Layers ..."]
-        L3["Self-Attention Layer N"]
+    subgraph S2 ["2. Bidirectional Encoder (BERT / RoBERTa)"]
+        ENC["12 to 24 Transformer Layers\n(Self-Attention over all words simultaneously)"]
     end
 
-    subgraph HiddenStates["Contextual Hidden Vectors (h_i)"]
-        H1["h_1"]
-        H2["h_2"]
-        H3["h_3"]
-        H4["h_4"]
-        H5["h_5"]
+    subgraph S3 ["3. Contextual Embeddings (h_i)"]
+        H1["h1 (768-dim vector)"]
+        H2["h2 (768-dim vector)"]
+        H3["h3 (768-dim vector)"]
+        H4["h4 (768-dim vector)"]
+        H5["h5 (768-dim vector)"]
     end
 
-    subgraph Classifier["Linear Classification Head (W, b) + Softmax"]
-        C1["Linear Head"]
-        C2["Linear Head"]
-        C3["Linear Head"]
-        C4["Linear Head"]
-        C5["Linear Head"]
+    subgraph S4 ["4. Binary Classifier + Softmax"]
+        C1["P(preserve) = 0.08\n(Discard)"]
+        C2["P(preserve) = 0.96\n(Preserve)"]
+        C3["P(preserve) = 0.98\n(Preserve)"]
+        C4["P(preserve) = 0.04\n(Discard)"]
+        C5["P(preserve) = 0.89\n(Preserve)"]
     end
 
-    subgraph OutputProbabilities["P(preserve) Score"]
-        P1["P=0.08 (Discard)"]
-        P2["P=0.96 (Preserve)"]
-        P3["P=0.98 (Preserve)"]
-        P4["P=0.04 (Discard)"]
-        P5["P=0.89 (Preserve)"]
-    end
+    W1 --> ENC
+    W2 --> ENC
+    W3 --> ENC
+    W4 --> ENC
+    W5 --> ENC
 
-    W1 --> TransformerEncoder --> H1 --> C1 --> P1
-    W2 --> TransformerEncoder --> H2 --> C2 --> P2
-    W3 --> TransformerEncoder --> H3 --> C3 --> P3
-    W4 --> TransformerEncoder --> H4 --> C4 --> P4
-    W5 --> TransformerEncoder --> H5 --> C5 --> P5
+    ENC --> H1 --> C1
+    ENC --> H2 --> C2
+    ENC --> H3 --> C3
+    ENC --> H4 --> C4
+    ENC --> H5 --> C5
 ```
 
 ---
@@ -251,20 +273,61 @@ flowchart LR
 
 ---
 
-#### 4.3 Mathematical Formulation & Tensor Operations
+#### 4.3 Mathematical Formulation Demystified (Step-by-Step with Real Numbers)
 
-1. **Contextual Encoding:**  
-   Given a tokenized sequence $T = (t_1, t_2, \dots, t_M)$, the pretrained Transformer encoder $f_\theta$ outputs a sequence of $d$-dimensional hidden vectors:
-   $$H = [h_1, h_2, \dots, h_M] = f_\theta(t_1, \dots, t_M) \quad \text{where } h_i \in \mathbb{R}^d$$
-   *(For `bert-base-multilingual`, $d = 768$; for `xlm-roberta-large`, $d = 1024$).*
+Here is the exact mathematical pipeline, explained with concrete examples instead of abstract symbols:
 
-2. **Linear Classification Head:**  
-   Each token's hidden vector $h_i$ is mapped through a single linear layer with weights $W \in \mathbb{R}^{2 \times d}$ and bias $b \in \mathbb{R}^2$ to produce unnormalized logits $z_i \in \mathbb{R}^2$:
-   $$z_i = W \cdot h_i + b = [z_{i, \text{discard}}, \; z_{i, \text{preserve}}]$$
+##### Equation 1: The Contextual Embedding ($h_i$)
+$$H = [h_1, h_2, \dots, h_M] = f_\theta(t_1, t_2, \dots, t_M) \quad \text{where } h_i \in \mathbb{R}^d$$
 
-3. **Probability Calculation (Softmax):**  
-   We apply a softmax over the two classes to compute the probability of preserving token $t_i$:
-   $$p_i = P(\text{preserve} \mid t_i) = \frac{e^{z_{i, \text{preserve}}}}{e^{z_{i, \text{discard}}} + e^{z_{i, \text{preserve}}}}$$
+* **What it means in plain English:**  
+  You feed the sequence of tokens into the Transformer encoder $f_\theta$. The encoder outputs a vector $h_i$ for each token $t_i$.
+* **What is $h_i$ physically?**  
+  It is a list of $d = 768$ numbers (for BERT-base) or $1,024$ numbers (for RoBERTa-large). These numbers represent the *meaning of the word given its entire surrounding context*.  
+  *(For example, the word "bank" in "river bank" will have a completely different $h_i$ vector than "bank" in "money bank").*
+
+---
+
+##### Equation 2: The Linear Classification Head ($z_i$)
+$$z_i = W \cdot h_i + b = [z_{i, \text{discard}}, \; z_{i, \text{preserve}}]$$
+
+* **What it means in plain English:**  
+  We take the 768-number vector $h_i$ and multiply it by a learned weight matrix $W \in \mathbb{R}^{2 \times 768}$, then add a bias vector $b \in \mathbb{R}^2$.
+* **Toy Numerical Example:**  
+  Suppose for the word `"quantum"`:
+  - Row 0 of $W$ calculates the **Discard Logit**: $z_{\text{discard}} = -1.5$
+  - Row 1 of $W$ calculates the **Preserve Logit**: $z_{\text{preserve}} = +3.2$
+  So the raw output is:
+  $$z = [-1.5, \; +3.2]$$
+
+---
+
+##### Equation 3: Softmax Probability ($p_i$)
+$$p_i = P(\text{preserve} \mid t_i) = \frac{e^{z_{i, \text{preserve}}}}{e^{z_{i, \text{discard}}} + e^{z_{i, \text{preserve}}}}$$
+
+* **What it means in plain English:**  
+  Softmax converts raw logits (which can be negative or positive) into valid probabilities between $0\%$ and $100\%$.
+* **Toy Numerical Example using $z = [-1.5, \; +3.2]$:**  
+  1. Calculate exponentials:  
+     $$e^{-1.5} \approx 0.223, \quad e^{3.2} \approx 24.532$$
+  2. Sum them up:  
+     $$\text{Sum} = 0.223 + 24.532 = 24.755$$
+  3. Divide to get the probability of keeping the word:  
+     $$p_i = \frac{24.532}{24.755} \approx \mathbf{0.991} \quad (99.1\% \text{ chance to preserve!})$$
+
+---
+
+##### Equation 4: Binary Cross-Entropy Loss ($\mathcal{L}$)
+$$\mathcal{L} = -\frac{1}{N} \sum_{i=1}^N \Big[ y_i \log(p_i) + (1 - y_i) \log(1 - p_i) \Big]$$
+
+* **What it means in plain English:**  
+  This is the penalty function the neural network tries to minimize during training:
+  - If the true label is $y_i = 1$ (word should be **kept**):  
+    The formula simplifies to $-\log(p_i)$.
+    - If the model predicted $p_i = 0.99$ (confident): Penalty $= -\log(0.99) = \mathbf{0.01}$ *(very small loss!)*.
+    - If the model predicted $p_i = 0.10$ (wrong!): Penalty $= -\log(0.10) = \mathbf{2.30}$ *(heavy punishment!)*.
+  - If the true label is $y_i = 0$ (word should be **discarded**):  
+    The formula simplifies to $-\log(1 - p_i)$, penalizing the model if $p_i$ is high.
 
 ---
 
@@ -286,16 +349,16 @@ However, GPT-4 annotated binary labels on whole **words**, not subwords. How doe
 
 ---
 
-#### 4.5 Loss Function & Training Optimization
+#### 4.5 Loss Function & Training Optimization Summary
 
-The model is trained using **Binary Cross-Entropy Loss** over all words in the batch:
-
-$$\mathcal{L} = -\frac{1}{N} \sum_{i=1}^N \Big[ y_i \log(p_i) + (1 - y_i) \log(1 - p_i) \Big]$$
-
-- **Optimizer:** AdamW with weight decay $0.01$.
-- **Learning Rate:** $1 \times 10^{-5}$ with a linear warmup over the first 10% of training steps.
-- **Batch Size:** 32 sequences (chunked at 512 tokens).
-- **Epochs:** 10 epochs over the distilled MeetingBank training set.
+| Parameter | Value | Purpose |
+| :--- | :--- | :--- |
+| **Model Backbone** | `xlm-roberta-large` (355M) or `mBERT` (110M) | Pretrained multilingual bidirectional transformer |
+| **Loss** | Binary Cross-Entropy (BCE) | Penalizes incorrect keep/drop predictions |
+| **Optimizer** | AdamW (weight decay = 0.01) | Prevents overfitting |
+| **Learning Rate** | $1 \times 10^{-5}$ with linear warmup | Gentle fine-tuning without catastrophic forgetting |
+| **Batch Size** | 32 sequences (chunked at $\le 512$ tokens) | Fits within standard GPU VRAM |
+| **Epochs** | 10 epochs | Full convergence over MeetingBank training split |
 
 ---
 
@@ -303,26 +366,39 @@ $$\mathcal{L} = -\frac{1}{N} \sum_{i=1}^N \Big[ y_i \log(p_i) + (1 - y_i) \log(1
 
 Once trained, the compressor is completely independent of GPT-4. Given **any prompt** and **any user-requested compression rate $\tau$**, compression executes through the following deterministic pipeline:
 
+```
+[User Input Prompt] (e.g. 100 words, target rate tau = 0.40)
+       │
+       ▼
+[Encoder Forward Pass] (BERT scores each word in 1 single pass)
+       │
+       ▼
+[Subword Pooling] (Average subword probabilities -> 1 score per word)
+       │
+       ▼
+[Top-K Ranking] (Select top 40 words with highest P(preserve))
+       │
+       ▼
+[Re-sort by Original Position] (Restore chronological order: Word 4, Word 7, Word 12...)
+       │
+       ▼
+[Output Compressed Text] (Returned in <200ms with zero hallucination)
+```
+
 ```mermaid
 sequenceDiagram
-    autonumber
-    actor User as Application / User
-    participant Comp as LLMLingua-2 Compressor
-    participant Tokenizer as Encoder Tokenizer
-    participant BERT as XLM-RoBERTa / mBERT
-    participant Ranker as Top-K Filter & Reconstructor
+    participant User as User / App
+    participant Comp as PromptCompressor
+    participant Enc as BERT / RoBERTa
+    participant Rank as Top-K Selector
 
     User->>Comp: compress_prompt(text, rate=0.40)
-    Comp->>Tokenizer: Tokenize text into words & subwords
-    Tokenizer-->>Comp: Word count = 100, Subwords = 135
-    Comp->>BERT: Single bidirectional forward pass
-    BERT-->>Comp: Output contextual embeddings h_i
-    Comp->>Comp: Compute P(preserve) per word (Subword Pooling)
-    Comp->>Ranker: Words + Scores + Target Budget (K = 40 words)
-    Ranker->>Ranker: Rank words by score descending
-    Ranker->>Ranker: Pick top 40 words
-    Ranker->>Ranker: Re-sort chosen 40 words by ORIGINAL position
-    Ranker-->>User: Return compressed prompt string
+    Comp->>Enc: Single forward pass over prompt
+    Enc-->>Comp: Contextual embeddings & word probabilities
+    Comp->>Rank: Calculate budget K = tau * N
+    Rank->>Rank: Select top K words by score
+    Rank->>Rank: Restore original word order
+    Rank-->>User: Return compressed prompt string
 ```
 
 ---
