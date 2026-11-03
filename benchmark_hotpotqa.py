@@ -82,6 +82,7 @@ def run_hotpotqa_benchmark(num_samples: int = 10, rates: List[float] = [0.8, 0.5
             "total_comp_tokens": 0,
             "latencies_ms": [],
             "throughputs": [],
+            "answer_preserved_count": 0,
             "extractive_answers_kept": 0,
             "extractive_samples_count": 0,
             "gold_retentions": [],
@@ -154,6 +155,7 @@ def run_hotpotqa_benchmark(num_samples: int = 10, rates: List[float] = [0.8, 0.5
             latency_ms = elapsed * 1000
             throughput = orig_tokens / elapsed if elapsed > 0 else 0
             
+            ans_present = check_answer_presence(answer, res["compressed_prompt"])
             evidence_metrics = compute_evidence_retention(gold_sentences, distractor_sentences, res["compressed_prompt"])
             
             # Type-gated answer check: only evaluate literal presence for extractive (bridge) questions
@@ -168,6 +170,8 @@ def run_hotpotqa_benchmark(num_samples: int = 10, rates: List[float] = [0.8, 0.5
             stats["total_comp_tokens"] += comp_tokens
             stats["latencies_ms"].append(latency_ms)
             stats["throughputs"].append(throughput)
+            if ans_present:
+                stats["answer_preserved_count"] += 1
             if is_extractive:
                 stats["extractive_samples_count"] += 1
                 if ans_present is True:
@@ -194,6 +198,7 @@ def run_hotpotqa_benchmark(num_samples: int = 10, rates: List[float] = [0.8, 0.5
             
             ans_display = f"{ans_present}" if is_extractive else "N/A (Deductive)"
             print(f"  > Rate {rate:.2f} ({1/rate:.2f}x): {comp_tokens}/{orig_tokens} tok ({(1-actual_rate)*100:.1f}% cut) "
+                  f"| {latency_ms:.1f}ms | Ans kept: {ans_present} | Gold Evidence Retained: {evidence_metrics['gold_retention_rate']*100:.1f}%")
                   f"| {latency_ms:.1f}ms | Extractive Ans Kept: {ans_display} | Gold Evidence Retained: {evidence_metrics['gold_retention_rate']*100:.1f}%")
             
         all_results.append(sample_eval)
@@ -202,6 +207,9 @@ def run_hotpotqa_benchmark(num_samples: int = 10, rates: List[float] = [0.8, 0.5
     aggregate_report = []
     print("\n" + "=" * 85)
     print("                    HOTPOTQA BENCHMARK AGGREGATE RESULTS")
+    print("=" * 85)
+    print(f"{'Rate':<6} | {'Ratio':<6} | {'Tokens Kept':<14} | {'Reduction':<10} | {'Latency':<10} | {'Throughput':<14} | {'Ans Recall':<11} | {'Gold Evidence'}")
+    print("-" * 85)
     print("=" * 95)
     print(f"{'Rate':<6} | {'Ratio':<6} | {'Tokens Kept':<14} | {'Reduction':<10} | {'Latency':<10} | {'Throughput':<14} | {'Extractive Ans':<14} | {'Gold Evidence'}")
     print("-" * 95)
@@ -214,6 +222,7 @@ def run_hotpotqa_benchmark(num_samples: int = 10, rates: List[float] = [0.8, 0.5
         overall_ratio = tot_orig / tot_comp if tot_comp > 0 else 0
         avg_latency = sum(s["latencies_ms"]) / len(s["latencies_ms"])
         avg_throughput = sum(s["throughputs"]) / len(s["throughputs"])
+        ans_recall = (s["answer_preserved_count"] / num_samples) * 100
         
         n_extractive = s["extractive_samples_count"]
         ext_recall = (s["extractive_answers_kept"] / n_extractive * 100) if n_extractive > 0 else 0.0
@@ -222,6 +231,7 @@ def run_hotpotqa_benchmark(num_samples: int = 10, rates: List[float] = [0.8, 0.5
         
         row_str = (f"{rate:<6.2f} | {overall_ratio:<5.2f}x | {tot_comp}/{tot_orig} ({overall_actual_rate*100:.1f}%) | "
                    f"{(1-overall_actual_rate)*100:<9.1f}% | {avg_latency:<8.1f}ms | {avg_throughput:<10.1f} tok/s | "
+                   f"{ans_recall:<10.1f}% | {avg_gold_retention:.1f}% (vs {avg_dist_retention:.1f}% dist)")
                    f"{ext_recall:<13.1f}% | {avg_gold_retention:.1f}% (vs {avg_dist_retention:.1f}% dist)")
         print(row_str)
         
@@ -235,6 +245,7 @@ def run_hotpotqa_benchmark(num_samples: int = 10, rates: List[float] = [0.8, 0.5
             "total_compressed_tokens": tot_comp,
             "avg_latency_ms": round(avg_latency, 2),
             "avg_throughput_tok_s": round(avg_throughput, 1),
+            "answer_retention_pct": round(ans_recall, 1),
             "extractive_answer_recall_pct": round(ext_recall, 1),
             "avg_gold_evidence_retention_pct": round(avg_gold_retention, 2),
             "avg_distractor_retention_pct": round(avg_dist_retention, 2),

@@ -16,34 +16,33 @@ This project investigates **Adaptive Prompt Compression**: dynamically determini
 
 ---
 
-## 📚 Project Documentation & Markdown Reports
+## 📚 Documentation Index (`docs/`)
 
-All analytical explanations, benchmark findings, and theoretical guides are documented in Markdown files:
+All theoretical guides, benchmark reports, and replication analyses are organized under `docs/`:
 
-| Document | Description |
-| :--- | :--- |
-| [linear_layer_vs_regression.md](file:///c:/Users/E%20N%20V%20Y/OneDrive%20-%20Ecole%20Centrale%20Casablanca/Bureau/Lab_project/linear_layer_vs_regression.md) | **ML Foundations:** Clarifies why LLMLingua-2 uses a Linear Classification Head with Softmax (Logistic Regression) rather than Linear Regression. |
-| [colab_pipeline_explained.md](file:///c:/Users/E%20N%20V%20Y/OneDrive%20-%20Ecole%20Centrale%20Casablanca/Bureau/Lab_project/colab_pipeline_explained.md) | **Pipeline Guide:** Maps the 4-stage pipeline implemented in the peer's Colab notebook (from compression to Mistral inference). |
-| [comparison_with_peer_benchmark.md](file:///c:/Users/E%20N%20V%20Y/OneDrive%20-%20Ecole%20Centrale%20Casablanca/Bureau/Lab_project/comparison_with_peer_benchmark.md) | **Peer Comparison Study:** Contrasting your HotpotQA diagnostic benchmark with the peer's MeetingBank Colab replication. |
-| [colab_replication_analysis.md](file:///c:/Users/E%20N%20V%20Y/OneDrive%20-%20Ecole%20Centrale%20Casablanca/Bureau/Lab_project/colab_replication_analysis.md) | **Colab Reproduction Study:** In-depth analysis of the MeetingBank replication notebook, testing LLMLingua-2 claims on Mistral-7B. |
-| [metrics_critique_and_refinement.md](file:///c:/Users/E%20N%20V%20Y/OneDrive%20-%20Ecole%20Centrale%20Casablanca/Bureau/Lab_project/metrics_critique_and_refinement.md) | **Metrics Critique:** Why naive answer checking fails on boolean questions, and why type-gated entity checks are necessary. |
-| [qa_types_and_evaluation.md](file:///c:/Users/E%20N%20V%20Y/OneDrive%20-%20Ecole%20Centrale%20Casablanca/Bureau/Lab_project/qa_types_and_evaluation.md) | **QA Types Guide:** Explains why answers don't appear in text for comparison/boolean questions (Bridge vs. Comparison questions). |
-| [evidence_and_metrics_explained.md](file:///c:/Users/E%20N%20V%20Y/OneDrive%20-%20Ecole%20Centrale%20Casablanca/Bureau/Lab_project/evidence_and_metrics_explained.md) | **Evaluation Guide:** Deep dive into "Gold Evidence", "Ans Kept", and how researchers evaluate prompt compression. |
-| [terminal_output_analysis.md](file:///c:/Users/E%20N%20V%20Y/OneDrive%20-%20Ecole%20Centrale%20Casablanca/Bureau/Lab_project/terminal_output_analysis.md) | **Terminal Output Guide:** Plain-English translation of all terminal output, demystifying HuggingFace warnings and explaining the `Ans kept: False` mystery. |
-| [hotpotqa_benchmark_report.md](file:///c:/Users/E%20N%20V%20Y/OneDrive%20-%20Ecole%20Centrale%20Casablanca/Bureau/Lab_project/hotpotqa_benchmark_report.md) | **Latest Benchmark Report:** Multi-document RAG compression analytics on HotpotQA, showing the "Distractor Token Waste" problem and the two-stage adaptive architecture. |
-| [prompt_compression_guide.md](file:///c:/Users/E%20N%20V%20Y/OneDrive%20-%20Ecole%20Centrale%20Casablanca/Bureau/Lab_project/prompt_compression_guide.md) | Comprehensive foundations on Information Theory, Perplexity, LLMLingua-1, and LLMLingua-2. |
-| [llmlingua_1_explained.md](file:///c:/Users/E%20N%20V%20Y/OneDrive%20-%20Ecole%20Centrale%20Casablanca/Bureau/Lab_project/llmlingua_1_explained.md) | In-depth breakdown of LLMLingua-1 (EMNLP 2023) budget controllers & iterative causal perplexity pruning. |
-| [llmlingua_2_explained.md](file:///c:/Users/E%20N%20V%20Y/OneDrive%20-%20Ecole%20Centrale%20Casablanca/Bureau/Lab_project/llmlingua_2_explained.md) | In-depth breakdown of LLMLingua-2 (ACL Findings 2024) data distillation, bidirectional classification, and inference. |
+### 🔬 Core Methodology & Theory (`docs/guides/`)
+- [prompt_compression_guide.md](docs/guides/prompt_compression_guide.md): Information Theory foundations, perplexity, and compression fundamentals.
+- [llmlingua_1_explained.md](docs/guides/llmlingua_1_explained.md): Budget controller & iterative causal perplexity pruning (EMNLP 2023).
+- [llmlingua_2_explained.md](docs/guides/llmlingua_2_explained.md): Data distillation, bidirectional token classification, subword pooling, and inference (ACL Findings 2024).
+
+### 📊 Benchmark Reports (`docs/benchmarks/`)
+- [hotpotqa_benchmark_report.md](docs/benchmarks/hotpotqa_benchmark_report.md): Multi-document RAG compression benchmark results across 4 compression rates on NVIDIA MX150.
+- [hotpotqa_evaluation_guide.md](docs/benchmarks/hotpotqa_evaluation_guide.md): Guide to gold evidence metrics, bridge vs. comparison question types, and entity fragility.
+
+### 🔄 Independent Replication Study (`docs/replication/`)
+- [peer_colab_replication_study.md](docs/replication/peer_colab_replication_study.md): MeetingBank replication analysis on Mistral-7B, pipeline mapping, and comparative insights.
 
 ---
 
-## 🔬 Experimental Code & Benchmarks
+## 💻 Experimental Scripts & Data
 
-| Script | Purpose | Output Data |
-| :--- | :--- | :--- |
-| [test_setup.py](file:///c:/Users/E%20N%20V%20Y/OneDrive%20-%20Ecole%20Centrale%20Casablanca/Bureau/Lab_project/test_setup.py) | Verifies CUDA GPU acceleration (MX150), PyTorch, Hugging Face cache on Drive E:. | Console Output |
-| [test_llmlingua_compression.py](file:///c:/Users/E%20N%20V%20Y/OneDrive%20-%20Ecole%20Centrale%20Casablanca/Bureau/Lab_project/test_llmlingua_compression.py) | Initial compression test measuring latency and token throughput across ratios. | [first_llmlingua_test_results.json](file:///c:/Users/E%20N%20V%20Y/OneDrive%20-%20Ecole%20Centrale%20Casablanca/Bureau/Lab_project/first_llmlingua_test_results.json) |
-| [benchmark_hotpotqa.py](file:///c:/Users/E%20N%20V%20Y/OneDrive%20-%20Ecole%20Centrale%20Casablanca/Bureau/Lab_project/benchmark_hotpotqa.py) | Full RAG multi-document benchmark on HotpotQA measuring answer recall & evidence retention. | [hotpotqa_benchmark_results.json](file:///c:/Users/E%20N%20V%20Y/OneDrive%20-%20Ecole%20Centrale%20Casablanca/Bureau/Lab_project/hotpotqa_benchmark_results.json) |
+| Script / Data | Description |
+| :--- | :--- |
+| `benchmark_hotpotqa.py` | Multi-document RAG benchmark testing LLMLingua-2 on HotpotQA across compression rates. |
+| `test_llmlingua_compression.py` | Initial speed, latency, and throughput verification script. |
+| `test_setup.py` | Environment and GPU sanity check script. |
+| `hotpotqa_benchmark_results.json` | Full quantitative evaluation output across 40 test runs. |
+| `first_llmlingua_test_results.json` | Raw output trace of initial single-prompt benchmark. |
 
 ---
 
@@ -55,4 +54,3 @@ All analytical explanations, benchmark findings, and theoretical guides are docu
   ```powershell
   .\activate.ps1
   ```
-
