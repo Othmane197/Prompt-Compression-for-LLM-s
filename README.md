@@ -20,7 +20,8 @@ This project investigates **Adaptive Prompt Compression**: dynamically determini
 
 All theoretical guides, benchmark reports, and replication analyses are organized under `docs/`:
 
-### 🔬 Core Methodology & Theory (`docs/guides/`)
+### 🔬 Core Methodology & Theory (`docs/guides/` & `docs/methodologies/`)
+- [adaptive_compression_strategies.md](docs/methodologies/adaptive_compression_strategies.md): **Core Thesis Roadmap:** Why uniform compression fails, how LongLLMLingua/LLMLingua-1 distributed budgets, and our proposed innovations (Two-Stage Adaptive RAG, Structure-Agnostic Sensitivity, Query-Conditioned Pruning).
 - [prompt_compression_guide.md](docs/guides/prompt_compression_guide.md): Information Theory foundations, perplexity, and compression fundamentals.
 - [llmlingua_1_explained.md](docs/guides/llmlingua_1_explained.md): Budget controller & iterative causal perplexity pruning (EMNLP 2023).
 - [llmlingua_2_explained.md](docs/guides/llmlingua_2_explained.md): Data distillation, bidirectional token classification, subword pooling, and inference (ACL Findings 2024).
