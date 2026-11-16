@@ -67,3 +67,4 @@ In our benchmark script (`benchmark_hotpotqa.py`), we use **Type-Gated Checking*
 | `FutureWarning: Using TRANSFORMERS_CACHE is deprecated...` | Hugging Face updated their library settings and prefers `HF_HOME`. | Harmless developer note. |
 | `UserWarning: huggingface_hub cache-system uses symlinks...` | Windows restricts symlinks without Developer Mode; Hugging Face copies files normally on Drive E:. | Harmless file copy fallback. |
 | `Token indices sequence length is longer than specified maximum (1739 > 512)...` | Long multi-document prompt exceeded BERT's 512 window; LLMLingua-2 automatically split it into chunks. | Informational; handled automatically. |
+

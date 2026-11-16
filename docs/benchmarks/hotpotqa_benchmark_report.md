@@ -38,14 +38,16 @@ $$\text{Throughput (tokens/s)} = \frac{\text{Token Count}}{\text{Inference Laten
 
 The benchmark processed **10 multi-document RAG prompts** consisting of **15,076 total tokens** (average ~1,500 tokens per prompt across 10 retrieved Wikipedia documents: 2 gold evidence passages + 8 distractors).
 
-| Target Rate ($\tau$) | Actual Ratio | Total Kept Tokens | Token Reduction | Average Latency | Average Throughput | Answer Recall | Gold Evidence Retained | Distractor Noise Retained | Selectivity Gap |
+| Target Rate ($\tau$) | Actual Ratio | Total Kept Tokens | Token Reduction | Average Latency | Average Throughput | Extractive Ans Recall | Gold Evidence Retained | Distractor Noise Retained | Selectivity Gap |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **0.80** (1.25x) | **1.67x** | 9,035 / 15,076 | **40.1%** | 8,190 ms | 227.2 tok/s | **70.0%** | **93.2%** | 80.0% | **+13.2%** |
-| **0.50** (2.00x) | **3.55x** | 4,242 / 15,076 | **71.9%** | 7,784 ms | 257.6 tok/s | **60.0%** | **60.9%** | 48.2% | **+12.7%** |
-| **0.33** (3.03x) | **5.41x** | 2,787 / 15,076 | **81.5%** | 7,605 ms | 259.5 tok/s | **30.0%** | **44.9%** | 31.6% | **+13.3%** |
-| **0.20** (5.00x) | **10.96x** | 1,375 / 15,076 | **90.9%** | 7,240 ms | 265.5 tok/s | **10.0%** | **23.6%** | 15.4% | **+8.2%** |
+| **0.80** (1.25x) | **1.67x** | 9,035 / 15,076 | **40.1%** | 5,833 ms | 287.3 tok/s | **100.0%** | **93.2%** | 80.0% | **+13.2%** |
+| **0.50** (2.00x) | **3.55x** | 4,242 / 15,076 | **71.9%** | 5,473 ms | 314.8 tok/s | **85.7%** | **60.9%** | 48.2% | **+12.7%** |
+| **0.33** (3.03x) | **5.41x** | 2,787 / 15,076 | **81.5%** | 5,872 ms | 304.4 tok/s | **42.9%** | **44.9%** | 31.6% | **+13.3%** |
+| **0.20** (5.00x) | **10.96x** | 1,375 / 15,076 | **90.9%** | 5,351 ms | 314.4 tok/s | **14.3%** | **23.6%** | 15.4% | **+8.2%** |
 
-> **Note on Answer Recall:** For binary questions (*"yes/no"*), the answer is deduced by inference and does not appear verbatim in the text. For extractive named-entity questions (*e.g. "Animorphs", "Chief of Protocol", "YG Entertainment"*), exact answer recall is **100%** at $\tau = 0.80$ and $\tau = 0.50$.
+> **Note on Extractive Answer Recall:** Only the **7 bridge (extractive) questions** are scored. For the 3 comparison questions (*"yes/no"* or "which of the two"), the answer is deduced by inference and need not appear verbatim, so they are excluded. Recall is **100%** at $\tau = 0.80$ and **85.7% (6/7)** at $\tau = 0.50$, where the first loss is the numeric answer `"3,677 seated"` (Sample 8).
+>
+> **Note on Latency:** Figures are from a re-run with a GPU warm-up pass excluded from timing (NVIDIA MX150). Latency is dominated by machine-level noise at this scale (individual calls range ~4–15 s) and is roughly flat across rates, since LLMLingua-2 scores every token once regardless of the target rate.
 
 ---
 
@@ -109,7 +111,7 @@ flowchart TD
 
 ### Expected Benefit of Adaptive Allocation:
 At the same overall token reduction (e.g. 70% total compression, $\tau = 0.30$):
-- **Uniform LLMLingua-2:** Retains ~44% gold evidence + ~31% distractors $\implies$ **30% answer recall**.
+- **Uniform LLMLingua-2:** Retains ~44% gold evidence + ~31% distractors $\implies$ **42.9% extractive answer recall** (at $\tau = 0.33$).
 - **Adaptive Two-Stage Compressor:** Retains ~90% gold evidence + ~10% distractors $\implies$ **Estimated >80% answer recall**.
 
 ---

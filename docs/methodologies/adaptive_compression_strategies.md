@@ -156,3 +156,4 @@ The token classification probability $P(\text{preserve} \mid t_i)$ becomes **dir
 | **Milestone 4.2 (Two-Stage Benchmark)** | Integrate Stage 1 Scorer with LLMLingua-2 on HotpotQA. | Measure Gold Evidence Retention jumping from **44% $\rightarrow$ >85%** at $3\times$ compression! |
 | **Milestone 4.3 (Structure-Agnostic)** | Implement sliding semantic chunking for raw unstructured prompts. | Fulfills your supervisor's specific requirement for unformatted prompts. |
 | **Milestone 4.4 (LLM Reader Evaluation)** | Connect an open-source reader LLM or API to compute final Exact Match (EM) QA scores. | Produces the final experimental tables and figures for your thesis report and defense presentation. |
+

@@ -16,8 +16,10 @@ Open PowerShell in the project directory (`Lab_project`):
 # 2. Run Test 1: Single-Prompt Compression Across 5 Ratios
 python test_llmlingua_compression.py
 
-# 3. Run Test 2: HotpotQA Multi-Document RAG Benchmark
+# 3. Run Test 2: HotpotQA Multi-Document RAG Benchmark (reference run: 10 samples, 4 rates)
 python benchmark_hotpotqa.py
+#    Quick test / custom run (writes hotpotqa_results_n<N>.json, never overwrites the reference results)
+python benchmark_hotpotqa.py -n 2 -r 0.5 0.2
 
 # 4. Run Environment Sanity Check
 python test_setup.py
@@ -80,13 +82,14 @@ After the initial CUDA warmup pass (18.6s), steady-state compression runs in **~
 
 | Target Rate ($\tau$) | Actual Ratio | Total Kept Tokens | Token Reduction | Avg Latency | Avg Throughput | Extractive Ans Recall | Gold Evidence Retained | Distractor Noise Retained | Selectivity Gap |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **0.80** (1.25x) | **1.67x** | 9,035 / 15,076 | **40.1%** | 8.19 s | 227.2 tok/s | **100.0%** | **93.2%** | 80.0% | **+13.2%** |
-| **0.50** (2.00x) | **3.55x** | 4,242 / 15,076 | **71.9%** | 7.78 s | 257.6 tok/s | **100.0%** | **60.9%** | 48.2% | **+12.7%** |
-| **0.33** (3.03x) | **5.41x** | 2,787 / 15,076 | **81.5%** | 7.61 s | 259.5 tok/s | **57.1%** | **44.9%** | 31.6% | **+13.3%** |
-| **0.20** (5.00x) | **10.96x** | 1,375 / 15,076 | **90.9%** | 7.24 s | 265.5 tok/s | **14.3%** | **23.6%** | 15.4% | **+8.2%** |
+| **0.80** (1.25x) | **1.67x** | 9,035 / 15,076 | **40.1%** | 5.83 s | 287.3 tok/s | **100.0%** | **93.2%** | 80.0% | **+13.2%** |
+| **0.50** (2.00x) | **3.55x** | 4,242 / 15,076 | **71.9%** | 5.47 s | 314.8 tok/s | **85.7%** | **60.9%** | 48.2% | **+12.7%** |
+| **0.33** (3.03x) | **5.41x** | 2,787 / 15,076 | **81.5%** | 5.87 s | 304.4 tok/s | **42.9%** | **44.9%** | 31.6% | **+13.3%** |
+| **0.20** (5.00x) | **10.96x** | 1,375 / 15,076 | **90.9%** | 5.35 s | 314.4 tok/s | **14.3%** | **23.6%** | 15.4% | **+8.2%** |
 
 ### Key Scientific Discovery:
 1. **The "Distractor Token Waste" Problem:**  
    At $\tau = 0.50$, the compressor kept **60.9% of the true Gold Evidence**, but it also retained **48.2% of the irrelevant Distractor noise**. Uniform compression wastes half its budget preserving irrelevant text.
 2. **Safe Operating Range:**  
-   Extractive named entities survive with **100% fidelity up to 2.0x compression**. Between 3x and 5x compression, entity survival drops sharply, proving the need for **query-aware adaptive budget allocation**.
+   Extractive answers survive with **100% fidelity at $\tau = 0.80$** (1.67x actual), and already drop to **85.7% at $\tau = 0.50$** (3.55x actual), where the numeric answer `"3,677 seated"` is lost. Beyond that, survival collapses (42.9% → 14.3%), supporting the need for **query-aware adaptive budget allocation**.
+

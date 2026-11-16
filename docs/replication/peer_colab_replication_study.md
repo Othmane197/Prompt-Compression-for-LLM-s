@@ -65,3 +65,4 @@ flowchart TD
 The two studies provide two halves of the project's foundation:
 1. **The Peer's Study (Macro):** Establishes on the paper's original dataset that LLMLingua-2 does not magically improve LLM intelligence.
 2. **Your Benchmark (Micro):** Uncovers the factual mechanism of failure on multi-document inputs (distractor waste), giving the mathematical justification for building an **Adaptive Compressor**.
+
