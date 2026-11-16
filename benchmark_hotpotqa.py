@@ -1,6 +1,7 @@
 import os
 import sys
 import time
+import argparse
 import json
 import re
 from typing import List, Dict, Any
@@ -48,7 +49,9 @@ def compute_evidence_retention(gold_sentences: List[str], distractor_sentences: 
         "evidence_selectivity": round(gold_recall - dist_recall, 4)
     }
 
-def run_hotpotqa_benchmark(num_samples: int = 10, rates: List[float] = [0.8, 0.5, 0.33, 0.2]):
+def run_hotpotqa_benchmark(num_samples: int = 10, rates: List[float] = (0.8, 0.5, 0.33, 0.2),
+                           output_path: str = "hotpotqa_benchmark_results.json"):
+    rates = list(rates)
     device = "cuda" if torch.cuda.is_available() else "cpu"
     print("=" * 85)
     print(f"   HOTPOTQA MULTI-DOCUMENT RAG BENCHMARK FOR PROMPT COMPRESSION")
@@ -65,7 +68,17 @@ def run_hotpotqa_benchmark(num_samples: int = 10, rates: List[float] = [0.8, 0.5
         device_map=device
     )
     print(f"Model loaded successfully in {time.time() - t_start:.2f}s")
-    
+
+    # Warm-up pass: the first CUDA call pays kernel/initialisation costs that would
+    # otherwise inflate the latency of whichever rate happens to run first.
+    t_warm = time.time()
+    compressor.compress_prompt(
+        context=["Warm-up passage used only to initialise the GPU kernels before timing."],
+        question="What is this?",
+        rate=0.5,
+    )
+    print(f"Warm-up pass completed in {time.time() - t_warm:.2f}s (excluded from latency stats)")
+
     # 2. Load HotpotQA Dataset
     print(f"\n[2/3] Loading {num_samples} samples from HotpotQA validation set...")
     dataset = datasets.load_dataset("hotpot_qa", "distractor", split=f"validation[:{num_samples}]")
@@ -82,7 +95,6 @@ def run_hotpotqa_benchmark(num_samples: int = 10, rates: List[float] = [0.8, 0.5
             "total_comp_tokens": 0,
             "latencies_ms": [],
             "throughputs": [],
-            "answer_preserved_count": 0,
             "extractive_answers_kept": 0,
             "extractive_samples_count": 0,
             "gold_retentions": [],
@@ -155,9 +167,8 @@ def run_hotpotqa_benchmark(num_samples: int = 10, rates: List[float] = [0.8, 0.5
             latency_ms = elapsed * 1000
             throughput = orig_tokens / elapsed if elapsed > 0 else 0
             
-            ans_present = check_answer_presence(answer, res["compressed_prompt"])
             evidence_metrics = compute_evidence_retention(gold_sentences, distractor_sentences, res["compressed_prompt"])
-            
+
             # Type-gated answer check: only evaluate literal presence for extractive (bridge) questions
             if is_extractive:
                 ans_present = check_answer_presence(answer, res["compressed_prompt"])
@@ -170,8 +181,6 @@ def run_hotpotqa_benchmark(num_samples: int = 10, rates: List[float] = [0.8, 0.5
             stats["total_comp_tokens"] += comp_tokens
             stats["latencies_ms"].append(latency_ms)
             stats["throughputs"].append(throughput)
-            if ans_present:
-                stats["answer_preserved_count"] += 1
             if is_extractive:
                 stats["extractive_samples_count"] += 1
                 if ans_present is True:
@@ -198,18 +207,14 @@ def run_hotpotqa_benchmark(num_samples: int = 10, rates: List[float] = [0.8, 0.5
             
             ans_display = f"{ans_present}" if is_extractive else "N/A (Deductive)"
             print(f"  > Rate {rate:.2f} ({1/rate:.2f}x): {comp_tokens}/{orig_tokens} tok ({(1-actual_rate)*100:.1f}% cut) "
-                  f"| {latency_ms:.1f}ms | Ans kept: {ans_present} | Gold Evidence Retained: {evidence_metrics['gold_retention_rate']*100:.1f}%")
                   f"| {latency_ms:.1f}ms | Extractive Ans Kept: {ans_display} | Gold Evidence Retained: {evidence_metrics['gold_retention_rate']*100:.1f}%")
             
         all_results.append(sample_eval)
         
     # Compute Aggregate Analytics
     aggregate_report = []
-    print("\n" + "=" * 85)
-    print("                    HOTPOTQA BENCHMARK AGGREGATE RESULTS")
-    print("=" * 85)
-    print(f"{'Rate':<6} | {'Ratio':<6} | {'Tokens Kept':<14} | {'Reduction':<10} | {'Latency':<10} | {'Throughput':<14} | {'Ans Recall':<11} | {'Gold Evidence'}")
-    print("-" * 85)
+    print("\n" + "=" * 95)
+    print("                       HOTPOTQA BENCHMARK AGGREGATE RESULTS")
     print("=" * 95)
     print(f"{'Rate':<6} | {'Ratio':<6} | {'Tokens Kept':<14} | {'Reduction':<10} | {'Latency':<10} | {'Throughput':<14} | {'Extractive Ans':<14} | {'Gold Evidence'}")
     print("-" * 95)
@@ -222,7 +227,6 @@ def run_hotpotqa_benchmark(num_samples: int = 10, rates: List[float] = [0.8, 0.5
         overall_ratio = tot_orig / tot_comp if tot_comp > 0 else 0
         avg_latency = sum(s["latencies_ms"]) / len(s["latencies_ms"])
         avg_throughput = sum(s["throughputs"]) / len(s["throughputs"])
-        ans_recall = (s["answer_preserved_count"] / num_samples) * 100
         
         n_extractive = s["extractive_samples_count"]
         ext_recall = (s["extractive_answers_kept"] / n_extractive * 100) if n_extractive > 0 else 0.0
@@ -231,7 +235,6 @@ def run_hotpotqa_benchmark(num_samples: int = 10, rates: List[float] = [0.8, 0.5
         
         row_str = (f"{rate:<6.2f} | {overall_ratio:<5.2f}x | {tot_comp}/{tot_orig} ({overall_actual_rate*100:.1f}%) | "
                    f"{(1-overall_actual_rate)*100:<9.1f}% | {avg_latency:<8.1f}ms | {avg_throughput:<10.1f} tok/s | "
-                   f"{ans_recall:<10.1f}% | {avg_gold_retention:.1f}% (vs {avg_dist_retention:.1f}% dist)")
                    f"{ext_recall:<13.1f}% | {avg_gold_retention:.1f}% (vs {avg_dist_retention:.1f}% dist)")
         print(row_str)
         
@@ -245,7 +248,6 @@ def run_hotpotqa_benchmark(num_samples: int = 10, rates: List[float] = [0.8, 0.5
             "total_compressed_tokens": tot_comp,
             "avg_latency_ms": round(avg_latency, 2),
             "avg_throughput_tok_s": round(avg_throughput, 1),
-            "answer_retention_pct": round(ans_recall, 1),
             "extractive_answer_recall_pct": round(ext_recall, 1),
             "avg_gold_evidence_retention_pct": round(avg_gold_retention, 2),
             "avg_distractor_retention_pct": round(avg_dist_retention, 2),
@@ -257,19 +259,41 @@ def run_hotpotqa_benchmark(num_samples: int = 10, rates: List[float] = [0.8, 0.5
         "benchmark_metadata": {
             "dataset": "hotpot_qa (distractor)",
             "split": "validation",
-            "num_samples": num_samples,
+            "num_samples": len(dataset),
+            "rates": rates,
             "model": model_name,
-            "device": device
+            "device": device,
+            "gpu": torch.cuda.get_device_name(0) if device == "cuda" else None,
+            "warmup_excluded_from_latency": True
         },
         "aggregate_summary": aggregate_report,
         "sample_details": all_results
     }
-    
-    with open("hotpotqa_benchmark_results.json", "w", encoding="utf-8") as f:
+
+    with open(output_path, "w", encoding="utf-8") as f:
         json.dump(output_payload, f, indent=2, ensure_ascii=False)
-        
-    print("\nBenchmark finished! Full data saved to hotpotqa_benchmark_results.json")
+
+    print(f"\nBenchmark finished! Full data saved to {output_path}")
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Benchmark LLMLingua-2 prompt compression on HotpotQA (distractor setting).")
+    parser.add_argument("-n", "--num-samples", type=int, default=10,
+                        help="Number of HotpotQA validation samples (default: 10)")
+    parser.add_argument("-r", "--rates", type=float, nargs="+", default=[0.8, 0.5, 0.33, 0.2],
+                        help="Target compression rates, fraction of tokens kept (default: 0.8 0.5 0.33 0.2)")
+    parser.add_argument("-o", "--output", default=None,
+                        help="Output JSON path. Defaults to hotpotqa_benchmark_results.json for the full "
+                             "default run, otherwise hotpotqa_results_n<N>.json so quick tests never "
+                             "overwrite the reference results.")
+    return parser.parse_args()
+
 
 if __name__ == "__main__":
-    run_hotpotqa_benchmark(num_samples=10, rates=[0.8, 0.5, 0.33, 0.2])
+    args = parse_args()
+    output = args.output
+    if output is None:
+        is_reference_run = args.num_samples == 10 and args.rates == [0.8, 0.5, 0.33, 0.2]
+        output = "hotpotqa_benchmark_results.json" if is_reference_run else f"hotpotqa_results_n{args.num_samples}.json"
+    run_hotpotqa_benchmark(num_samples=args.num_samples, rates=args.rates, output_path=output)
 

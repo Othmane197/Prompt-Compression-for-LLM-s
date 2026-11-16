@@ -32,3 +32,6 @@ ehthumbs.db
 Desktop.ini
 $RECYCLE.BIN/
 
+
+# Ad-hoc benchmark runs (reference results live in hotpotqa_benchmark_results.json)
+hotpotqa_results_n*.json

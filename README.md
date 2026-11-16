@@ -57,3 +57,9 @@ All theoretical guides, benchmark reports, and replication analyses are organize
   ```powershell
   .\activate.ps1
   ```
+- **Dependencies:** `pip install -r requirements.txt` (see the file for the CUDA build of PyTorch).
+- **Running the benchmark:**
+  ```powershell
+  python benchmark_hotpotqa.py                  # reference run: 10 samples, rates 0.8 0.5 0.33 0.2
+  python benchmark_hotpotqa.py -n 2 -r 0.5 0.2  # quick test, saved to hotpotqa_results_n2.json
+  ```
