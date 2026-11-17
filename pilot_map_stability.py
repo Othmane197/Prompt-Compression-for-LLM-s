@@ -33,8 +33,11 @@ import torch
 import datasets
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-INSTRUCTION = ("Answer the question using the documents below. "
-               "Reply with a short answer only (a few words, or yes/no), no explanation.")
+# Neutral wording: an earlier version ("a few words, or yes/no") biased the reader towards
+# answering "No" even to non yes/no questions.
+INSTRUCTION = ("Answer the question based on the documents below. "
+               "Give only the answer, as a short phrase taken from the documents, without explanation. "
+               "Only if it is a yes/no question, answer yes or no.")
 
 
 # ----------------------------------------------------------------------------- scoring
@@ -67,15 +70,18 @@ def f1_score(pred: str, gold: str) -> float:
 
 # ----------------------------------------------------------------------------- reader
 class Reader:
-    def __init__(self, model_name: str, device: str, dtype: str = "float32"):
-        # float32 by default: Qwen2.5 is known to degrade silently in float16 (activation
-        # overflow), and T4 GPUs have no native bfloat16. A 3B model in float32 is ~12 GB.
+    def __init__(self, model_name: str, device: str, dtype: str = "float16", load_in_4bit: bool = False):
+        # float16 by default: a Kaggle diagnostic (5 queries x 4 rates) gave identical answers
+        # in float32 and float16 for Qwen2.5-3B, at half the memory.
         self.device = device
         self.tok = AutoTokenizer.from_pretrained(model_name)
         torch_dtype = getattr(torch, dtype) if device == "cuda" else torch.float32
-        self.model = AutoModelForCausalLM.from_pretrained(
-            model_name, torch_dtype=torch_dtype, device_map=device
-        ).eval()
+        kwargs = {"torch_dtype": torch_dtype, "device_map": device}
+        if load_in_4bit:  # e.g. a 7B model on a 16 GB T4
+            from transformers import BitsAndBytesConfig
+            kwargs["quantization_config"] = BitsAndBytesConfig(
+                load_in_4bit=True, bnb_4bit_compute_dtype=torch.float16, bnb_4bit_quant_type="nf4")
+        self.model = AutoModelForCausalLM.from_pretrained(model_name, **kwargs).eval()
 
     def prefix_ids(self, prompt: str):
         messages = [{"role": "user", "content": prompt}]
@@ -104,16 +110,22 @@ class Reader:
         return dec(greedy)[0], sampled
 
     @torch.no_grad()
-    def gold_probability(self, prompt: str, gold: str) -> float:
-        """Geometric-mean probability of the gold answer tokens (teacher forcing). 0..1, continuous.
-        The output layer is applied only to answer positions to save GPU memory."""
-        prefix = self.prefix_ids(prompt)
-        ans = self.tok(gold, add_special_tokens=False, return_tensors="pt").input_ids.to(self.device)
+    def _answer_probability(self, prefix, answer: str) -> float:
+        ans = self.tok(answer, add_special_tokens=False, return_tensors="pt").input_ids.to(self.device)
         ids = torch.cat([prefix, ans], dim=1)
         hidden = self.model.model(ids).last_hidden_state[0, prefix.shape[1] - 1: -1]
         logprobs = torch.log_softmax(self.model.lm_head(hidden).float(), dim=-1)
         token_lp = logprobs.gather(1, ans[0].unsqueeze(1)).squeeze(1)
         return math.exp(token_lp.mean().item())
+
+    def gold_probability(self, prompt: str, gold: str) -> float:
+        """Geometric-mean probability of the gold answer tokens (teacher forcing). 0..1, continuous.
+        Takes the max over casing variants: the model writes "No" while HotpotQA stores "no",
+        and scoring only the dataset's casing gave ~0 to answers the model was sure of.
+        The output layer is applied only to answer positions to save GPU memory."""
+        prefix = self.prefix_ids(prompt)
+        variants = {gold, gold[:1].upper() + gold[1:], gold.lower()}
+        return max(self._answer_probability(prefix, v) for v in variants if v)
 
 
 def build_prompt(context: str, question: str) -> str:
@@ -133,8 +145,9 @@ def main():
     ap.add_argument("--temperature", type=float, default=0.7)
     ap.add_argument("--max-new-tokens", type=int, default=32)
     ap.add_argument("--seed", type=int, default=0)
-    ap.add_argument("--dtype", default="float32", choices=["float32", "float16", "bfloat16"],
-                    help="reader precision on GPU (float16 degrades Qwen2.5 answers)")
+    ap.add_argument("--dtype", default="float16", choices=["float32", "float16", "bfloat16"],
+                    help="reader precision on GPU")
+    ap.add_argument("--load-in-4bit", action="store_true", help="4-bit quantized reader (bitsandbytes)")
     ap.add_argument("--out", default="pilot_results")
     args = ap.parse_args()
 
@@ -169,7 +182,7 @@ def main():
     print(f"Compression done for {len(ds)} queries x {len(args.rates)} rates in {time.time() - t_start:.0f}s")
 
     # ---------------------------------------------------------------- phase 2: reader answers
-    reader = Reader(args.reader, device, args.dtype)
+    reader = Reader(args.reader, device, args.dtype, args.load_in_4bit)
     rows = []
     for qi, s in enumerate(ds):
         full_ctx_tokens = reader.n_tokens(contexts[(qi, 1.0)]) if 1.0 in args.rates else None
