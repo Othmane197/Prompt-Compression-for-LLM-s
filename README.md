@@ -58,6 +58,14 @@ All theoretical guides, benchmark reports, and replication analyses are organize
   .\activate.ps1
   ```
 - **Dependencies:** `pip install -r requirements.txt` (see the file for the CUDA build of PyTorch).
+- **Pilot on Colab / Kaggle (performance map + stability, `pilot_map_stability.py`):** select a GPU runtime (T4), then:
+  ```python
+  !git clone https://github.com/Othmane197/Prompt-Compression-for-LLM-s.git
+  %cd Prompt-Compression-for-LLM-s
+  !pip install -q llmlingua datasets accelerate
+  !python pilot_map_stability.py --n-queries 2 --out test_run   # quick check
+  !python pilot_map_stability.py                                # pilot: 20 queries
+  ```
 - **Running the benchmark:**
   ```powershell
   python benchmark_hotpotqa.py                  # reference run: 10 samples, rates 0.8 0.5 0.33 0.2
