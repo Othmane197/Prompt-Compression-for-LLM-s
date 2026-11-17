@@ -50,7 +50,7 @@ def compute_evidence_retention(gold_sentences: List[str], distractor_sentences: 
     }
 
 def run_hotpotqa_benchmark(num_samples: int = 10, rates: List[float] = (0.8, 0.5, 0.33, 0.2),
-                           output_path: str = "hotpotqa_benchmark_results.json"):
+                           output_path: str = "results/hotpotqa_benchmark_results.json"):
     rates = list(rates)
     device = "cuda" if torch.cuda.is_available() else "cpu"
     print("=" * 85)
@@ -294,6 +294,6 @@ if __name__ == "__main__":
     output = args.output
     if output is None:
         is_reference_run = args.num_samples == 10 and args.rates == [0.8, 0.5, 0.33, 0.2]
-        output = "hotpotqa_benchmark_results.json" if is_reference_run else f"hotpotqa_results_n{args.num_samples}.json"
+        output = "results/hotpotqa_benchmark_results.json" if is_reference_run else f"hotpotqa_results_n{args.num_samples}.json"
     run_hotpotqa_benchmark(num_samples=args.num_samples, rates=args.rates, output_path=output)
 

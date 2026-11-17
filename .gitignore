@@ -37,3 +37,9 @@ $RECYCLE.BIN/
 hotpotqa_results_n*.json
 sensitivity_results_sample*.json
 kaggle_outputs/
+
+# Local only: archived material, personal machine config
+archive/
+.vscode/
+activate.bat
+activate.ps1
