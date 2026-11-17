@@ -92,14 +92,15 @@ class Reader:
         dec = lambda out: [self.tok.decode(o[ids.shape[1]:], skip_special_tokens=True).strip() for o in out]
         greedy = self.model.generate(ids, max_new_tokens=max_new_tokens, do_sample=False,
                                      pad_token_id=self.tok.eos_token_id)
+        # Sampled answers are generated one at a time (not num_return_sequences=K) to keep the
+        # GPU memory peak low: a 3B float32 model leaves only ~2 GB free on a 16 GB T4.
         sampled = []
-        if n_samples > 0:
-            torch.manual_seed(seed)
+        for k in range(n_samples):
+            torch.manual_seed(seed * 1000 + k)
             out = self.model.generate(ids, max_new_tokens=max_new_tokens, do_sample=True,
                                       temperature=temperature, top_p=1.0,
-                                      num_return_sequences=n_samples,
                                       pad_token_id=self.tok.eos_token_id)
-            sampled = dec(out)
+            sampled.extend(dec(out))
         return dec(greedy)[0], sampled
 
     @torch.no_grad()
@@ -208,10 +209,11 @@ def main():
                 "gold_prob": round(reader.gold_probability(prompt, s["answer"]), 5),
             })
         print(f"[{qi + 1}/{len(ds)}] {time.time() - t_start:6.0f}s  {s['question'][:70]}")
+        # Save after every query so a crash (e.g. GPU out of memory) never loses finished work.
+        with open(f"{args.out}.json", "w", encoding="utf-8") as f:
+            json.dump({"config": vars(args), "rows": rows}, f, indent=2, ensure_ascii=False)
 
     # ---------------------------------------------------------------- save
-    with open(f"{args.out}.json", "w", encoding="utf-8") as f:
-        json.dump({"config": vars(args), "rows": rows}, f, indent=2, ensure_ascii=False)
     flat_keys = [k for k in rows[0] if not isinstance(rows[0][k], list)]
     with open(f"{args.out}.csv", "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=flat_keys, extrasaction="ignore")
