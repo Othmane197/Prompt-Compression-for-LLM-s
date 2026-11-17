@@ -12,13 +12,13 @@ import sys
 REPO = "https://github.com/Othmane197/Prompt-Compression-for-LLM-s.git"
 
 # Each entry is one run of pilot_map_stability.py (executed in order).
-# Current step: reader choice. Uncompressed baseline (rate 1.0 only, greedy only) on 20 queries,
-# Qwen2.5-3B (float16) vs Qwen2.5-7B (4-bit), after fixing the prompt and the gold-prob casing.
+# History: (1) float32 vs float16 diagnostic -> identical answers; (2) uncompressed baseline on
+# 20 queries: Qwen2.5-3B EM 0.40 / F1 0.50 vs Qwen2.5-7B-4bit EM 0.45 / F1 0.54 (not a
+# significant gap, 2x slower) -> 3B kept.
+# Current step: stability pilot (20 queries x 4 rates x greedy + 5 sampled answers).
 RUNS = [
-    ["--n-queries", "20", "--rates", "1.0", "--samples", "0",
-     "--reader", "Qwen/Qwen2.5-3B-Instruct", "--out", "/kaggle/working/baseline_3b"],
-    ["--n-queries", "20", "--rates", "1.0", "--samples", "0",
-     "--reader", "Qwen/Qwen2.5-7B-Instruct", "--load-in-4bit", "--out", "/kaggle/working/baseline_7b_4bit"],
+    ["--n-queries", "20", "--samples", "5", "--reader", "Qwen/Qwen2.5-3B-Instruct",
+     "--out", "/kaggle/working/pilot_3b"],
 ]
 
 

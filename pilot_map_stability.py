@@ -110,22 +110,27 @@ class Reader:
         return dec(greedy)[0], sampled
 
     @torch.no_grad()
-    def _answer_probability(self, prefix, answer: str) -> float:
+    def _answer_logprobs(self, prefix, answer: str):
         ans = self.tok(answer, add_special_tokens=False, return_tensors="pt").input_ids.to(self.device)
         ids = torch.cat([prefix, ans], dim=1)
         hidden = self.model.model(ids).last_hidden_state[0, prefix.shape[1] - 1: -1]
         logprobs = torch.log_softmax(self.model.lm_head(hidden).float(), dim=-1)
-        token_lp = logprobs.gather(1, ans[0].unsqueeze(1)).squeeze(1)
-        return math.exp(token_lp.mean().item())
+        return logprobs.gather(1, ans[0].unsqueeze(1)).squeeze(1)
 
-    def gold_probability(self, prompt: str, gold: str) -> float:
-        """Geometric-mean probability of the gold answer tokens (teacher forcing). 0..1, continuous.
-        Takes the max over casing variants: the model writes "No" while HotpotQA stores "no",
-        and scoring only the dataset's casing gave ~0 to answers the model was sure of.
+    def gold_probability(self, prompt: str, gold: str):
+        """Teacher-forced probability of the gold answer. Returns (seq_prob, per_token_prob):
+          - seq_prob: P(model writes exactly this answer) = product of token probabilities.
+            This is the meaningful score: the per-token mean can be high even when the first
+            token is very unlikely (seen on Kaggle: answer "United States", per-token
+            probability of the gold "9,984" = 0.86).
+          - per_token_prob: geometric mean per token (kept for comparison).
+        Max over casing variants: the model writes "No" while HotpotQA stores "no".
         The output layer is applied only to answer positions to save GPU memory."""
         prefix = self.prefix_ids(prompt)
         variants = {gold, gold[:1].upper() + gold[1:], gold.lower()}
-        return max(self._answer_probability(prefix, v) for v in variants if v)
+        lps = [self._answer_logprobs(prefix, v) for v in variants if v]
+        return (max(math.exp(lp.sum().item()) for lp in lps),
+                max(math.exp(lp.mean().item()) for lp in lps))
 
 
 def build_prompt(context: str, question: str) -> str:
@@ -196,6 +201,7 @@ def main():
                 print(prompt[:800] + "\n[...]\n" + prompt[-400:])
                 print("-------------------------------------------------------\n")
 
+            gold_seq_prob, gold_tok_prob = reader.gold_probability(prompt, s["answer"])
             greedy, sampled = reader.answers(prompt, args.samples, args.temperature,
                                              args.max_new_tokens, seed=args.seed + qi)
             sampled_f1 = [f1_score(a, s["answer"]) for a in sampled]
@@ -219,7 +225,8 @@ def main():
                 "sampled_f1": [round(x, 4) for x in sampled_f1],
                 "sampled_f1_mean": round(float(np.mean(sampled_f1)), 4) if sampled else None,
                 "sampled_f1_std": round(float(np.std(sampled_f1)), 4) if sampled else None,
-                "gold_prob": round(reader.gold_probability(prompt, s["answer"]), 5),
+                "gold_prob": round(gold_seq_prob, 5),          # P(exact gold answer)
+                "gold_prob_per_token": round(gold_tok_prob, 5),  # geometric mean per token
             })
         print(f"[{qi + 1}/{len(ds)}] {time.time() - t_start:6.0f}s  {s['question'][:70]}")
         # Save after every query so a crash (e.g. GPU out of memory) never loses finished work.
