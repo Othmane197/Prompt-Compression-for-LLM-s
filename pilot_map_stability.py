@@ -67,12 +67,14 @@ def f1_score(pred: str, gold: str) -> float:
 
 # ----------------------------------------------------------------------------- reader
 class Reader:
-    def __init__(self, model_name: str, device: str):
+    def __init__(self, model_name: str, device: str, dtype: str = "float32"):
+        # float32 by default: Qwen2.5 is known to degrade silently in float16 (activation
+        # overflow), and T4 GPUs have no native bfloat16. A 3B model in float32 is ~12 GB.
         self.device = device
         self.tok = AutoTokenizer.from_pretrained(model_name)
-        dtype = torch.float16 if device == "cuda" else torch.float32
+        torch_dtype = getattr(torch, dtype) if device == "cuda" else torch.float32
         self.model = AutoModelForCausalLM.from_pretrained(
-            model_name, torch_dtype=dtype, device_map=device
+            model_name, torch_dtype=torch_dtype, device_map=device
         ).eval()
 
     def prefix_ids(self, prompt: str):
@@ -130,6 +132,8 @@ def main():
     ap.add_argument("--temperature", type=float, default=0.7)
     ap.add_argument("--max-new-tokens", type=int, default=32)
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--dtype", default="float32", choices=["float32", "float16", "bfloat16"],
+                    help="reader precision on GPU (float16 degrades Qwen2.5 answers)")
     ap.add_argument("--out", default="pilot_results")
     args = ap.parse_args()
 
@@ -141,26 +145,42 @@ def main():
     ds = datasets.load_dataset("hotpotqa/hotpot_qa", "distractor",
                                split=f"validation[{args.offset}:{args.offset + args.n_queries}]")
 
+    # ---------------------------------------------------------------- phase 1: compress everything
+    # Done first, then the compressor is freed, so the reader can use the whole GPU (float32).
+    import gc
     from llmlingua import PromptCompressor
-    compressor = PromptCompressor(model_name=args.compressor, use_llmlingua2=True, device_map=device)
-    reader = Reader(args.reader, device)
-
-    rows = []
     t_start = time.time()
+    compressor = PromptCompressor(model_name=args.compressor, use_llmlingua2=True, device_map=device)
+    contexts = {}  # (query_idx, rate) -> context text
     for qi, s in enumerate(ds):
         docs = [f"Document [{t}]: {' '.join(sents)}"
                 for t, sents in zip(s["context"]["title"], s["context"]["sentences"])]
-        full_context = "\n\n".join(docs)
-        full_ctx_tokens = reader.n_tokens(full_context)
-
         for rate in args.rates:
             if rate >= 1.0:
-                context = full_context
+                contexts[(qi, rate)] = "\n\n".join(docs)
             else:
                 res = compressor.compress_prompt(context=docs, rate=rate, use_token_level_filter=True)
-                context = res["compressed_prompt"]
+                contexts[(qi, rate)] = res["compressed_prompt"]
+    del compressor
+    gc.collect()
+    if device == "cuda":
+        torch.cuda.empty_cache()
+    print(f"Compression done for {len(ds)} queries x {len(args.rates)} rates in {time.time() - t_start:.0f}s")
+
+    # ---------------------------------------------------------------- phase 2: reader answers
+    reader = Reader(args.reader, device, args.dtype)
+    rows = []
+    for qi, s in enumerate(ds):
+        full_ctx_tokens = reader.n_tokens(contexts[(qi, 1.0)]) if 1.0 in args.rates else None
+
+        for rate in args.rates:
+            context = contexts[(qi, rate)]
             ctx_tokens = reader.n_tokens(context)
             prompt = build_prompt(context, s["question"])
+            if qi == 0 and rate == args.rates[0]:
+                print("\n----- EXAMPLE PROMPT SENT TO THE READER (query 0) -----")
+                print(prompt[:800] + "\n[...]\n" + prompt[-400:])
+                print("-------------------------------------------------------\n")
 
             greedy, sampled = reader.answers(prompt, args.samples, args.temperature,
                                              args.max_new_tokens, seed=args.seed + qi)
@@ -176,7 +196,7 @@ def main():
                 "target_rate": rate,
                 "context_tokens": ctx_tokens,
                 "full_context_tokens": full_ctx_tokens,
-                "actual_ratio": round(full_ctx_tokens / max(ctx_tokens, 1), 3),
+                "actual_ratio": round(full_ctx_tokens / max(ctx_tokens, 1), 3) if full_ctx_tokens else None,
                 "greedy_answer": greedy,
                 "greedy_em": exact_match(greedy, s["answer"]),
                 "greedy_f1": round(f1_score(greedy, s["answer"]), 4),
