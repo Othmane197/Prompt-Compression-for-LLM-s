@@ -70,13 +70,16 @@ def f1_score(pred: str, gold: str) -> float:
 
 # ----------------------------------------------------------------------------- reader
 class Reader:
-    def __init__(self, model_name: str, device: str, dtype: str = "float16", load_in_4bit: bool = False):
+    def __init__(self, model_name: str, device: str, dtype: str = "float16", load_in_4bit: bool = False,
+                 multi_gpu: bool = False):
         # float16 by default: a Kaggle diagnostic (5 queries x 4 rates) gave identical answers
         # in float32 and float16 for Qwen2.5-3B, at half the memory.
+        # multi_gpu: split the model over all visible GPUs (Kaggle gives 2 x T4), e.g. a 7B in
+        # float16 (~15 GB) that does not fit on a single 15 GB T4. Inputs go to the first GPU.
         self.device = device
         self.tok = AutoTokenizer.from_pretrained(model_name)
         torch_dtype = getattr(torch, dtype) if device == "cuda" else torch.float32
-        kwargs = {"torch_dtype": torch_dtype, "device_map": device}
+        kwargs = {"torch_dtype": torch_dtype, "device_map": "auto" if multi_gpu else device}
         if load_in_4bit:  # e.g. a 7B model on a 16 GB T4
             from transformers import BitsAndBytesConfig
             kwargs["quantization_config"] = BitsAndBytesConfig(
@@ -153,6 +156,7 @@ def main():
     ap.add_argument("--dtype", default="float16", choices=["float32", "float16", "bfloat16"],
                     help="reader precision on GPU")
     ap.add_argument("--load-in-4bit", action="store_true", help="4-bit quantized reader (bitsandbytes)")
+    ap.add_argument("--multi-gpu", action="store_true", help="split the reader over all visible GPUs")
     ap.add_argument("--out", default="pilot_results")
     args = ap.parse_args()
 
@@ -187,7 +191,7 @@ def main():
     print(f"Compression done for {len(ds)} queries x {len(args.rates)} rates in {time.time() - t_start:.0f}s")
 
     # ---------------------------------------------------------------- phase 2: reader answers
-    reader = Reader(args.reader, device, args.dtype, args.load_in_4bit)
+    reader = Reader(args.reader, device, args.dtype, args.load_in_4bit, args.multi_gpu)
     rows = []
     for qi, s in enumerate(ds):
         full_ctx_tokens = reader.n_tokens(contexts[(qi, 1.0)]) if 1.0 in args.rates else None
