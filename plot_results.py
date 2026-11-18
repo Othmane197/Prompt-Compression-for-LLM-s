@@ -91,6 +91,62 @@ def labels_for(curve, ratios, tol):
     return first_failure, last_success, monotone, fit
 
 
+def is_non_monotonic(ys, jump=0.2):
+    """True if the score rises by more than `jump` between two consecutive ratios
+    (more compression -> better answer). Same rule as the orange titles of figure 3."""
+    return any(ys[i + 1] > ys[i] + jump for i in range(len(ys) - 1))
+
+
+def compare_runs(path_a, path_b, out):
+    """Overlay per-query curves of two runs and print where jumps appear in each."""
+    cfg_a, _, rates_a, q_a, by_a = load(path_a)
+    cfg_b, _, rates_b, q_b, by_b = load(path_b)
+    rates = [t for t in rates_a if t in rates_b]
+    queries = [q for q in q_a if q in q_b]
+    name_a = cfg_a["reader"].split("/")[-1]
+    name_b = cfg_b["reader"].split("/")[-1]
+    os.makedirs(out, exist_ok=True)
+
+    same_ratio = all(abs(by_a[(q, t)]["actual_ratio"] - by_b[(q, t)]["actual_ratio"]) < 1e-6
+                     for q in queries for t in rates)
+    print(f"A = {name_a} | B = {name_b} | {len(queries)} common queries | rates {rates}")
+    print(f"Identical compressed inputs (same actual ratios): {same_ratio}")
+
+    ncols = 5
+    nrows = int(np.ceil(len(queries) / ncols))
+    fig, axes = plt.subplots(nrows, ncols, figsize=(2.3 * ncols, 1.9 * nrows), sharex=True, sharey=True)
+    print(f"\n{'query':>5} | {name_a + ' F1':<26} | {name_b + ' F1':<26} | jump A | jump B")
+    print("-" * 80)
+    jumps = {"A": 0, "B": 0, "both": 0}
+    for k, q in enumerate(queries):
+        xs = [by_a[(q, t)]["actual_ratio"] for t in rates]
+        ya = [score(by_a[(q, t)]) for t in rates]
+        yb = [score(by_b[(q, t)]) for t in rates]
+        ja, jb = is_non_monotonic(ya), is_non_monotonic(yb)
+        jumps["A"] += ja
+        jumps["B"] += jb
+        jumps["both"] += ja and jb
+        print(f"{'Q' + str(q):>5} | {' '.join(f'{v:.2f}' for v in ya):<26} | {' '.join(f'{v:.2f}' for v in yb):<26} | "
+              f"{'yes' if ja else '':<6} | {'yes' if jb else ''}")
+        ax = axes.flat[k]
+        ax.plot(xs, ya, color=BLUE, lw=2, marker="o", ms=5, label=name_a)
+        ax.plot(xs, yb, color=ORANGE, lw=2, marker="o", ms=5, label=name_b)
+        ax.set_ylim(-0.05, 1.05)
+        ax.set_title(f"Q{q}", fontsize=9, loc="left", color=INK)
+    for ax in list(axes.flat)[len(queries):]:
+        ax.axis("off")
+    handles, labels = axes.flat[0].get_legend_handles_labels()
+    fig.legend(handles, labels, loc="upper right", frameon=False, ncol=2)
+    fig.supxlabel("Actual compression ratio (×)", color=INK_2)
+    fig.supylabel("F1", color=INK_2)
+    fig.suptitle(f"Per-query curves: {name_a} vs {name_b}", x=0.01, ha="left", color=INK)
+    fig.tight_layout(rect=(0, 0, 1, 0.95))
+    fig.savefig(f"{out}/4_compare_per_query.png", dpi=150)
+    print(f"\nQueries whose score goes back up after a drop: {name_a} {jumps['A']}, "
+          f"{name_b} {jumps['B']}, both {jumps['both']} (out of {len(queries)})")
+    print(f"Figure saved: {out}/4_compare_per_query.png")
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("path", nargs="?", default="results/pilot_3b.json")
@@ -100,11 +156,16 @@ def main():
     ap.add_argument("--out", default="figures")
     ap.add_argument("--show", action="store_true")
     ap.add_argument("--greedy", action="store_true", help="score cells with the single greedy answer")
+    ap.add_argument("--compare", default=None,
+                    help="second run JSON (same queries/rates): overlay per-query curves of both runs")
     args = ap.parse_args()
     global USE_GREEDY
     USE_GREEDY = args.greedy
     if args.greedy and args.out == "figures":
         args.out = "figures/greedy"
+    if args.compare:
+        compare_runs(args.path, args.compare, args.out)
+        return
 
     cfg, rows, rates, queries, by = load(args.path)
     os.makedirs(args.out, exist_ok=True)

@@ -118,7 +118,8 @@ class Reader:
         ids = torch.cat([prefix, ans], dim=1)
         hidden = self.model.model(ids).last_hidden_state[0, prefix.shape[1] - 1: -1]
         logprobs = torch.log_softmax(self.model.lm_head(hidden).float(), dim=-1)
-        return logprobs.gather(1, ans[0].unsqueeze(1)).squeeze(1)
+        # .to(logprobs.device): with --multi-gpu the output layer may sit on another GPU
+        return logprobs.gather(1, ans[0].unsqueeze(1).to(logprobs.device)).squeeze(1)
 
     def gold_probability(self, prompt: str, gold: str):
         """Teacher-forced probability of the gold answer. Returns (seq_prob, per_token_prob):
