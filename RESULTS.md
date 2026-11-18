@@ -35,6 +35,32 @@ Script: `pilot_map_stability.py` · data: `results/pilot_3b.json`.
 4. **Weak baseline.** Only 11/20 queries reach F1 ≥ 0.5 without compression; queries already
    wrong at 1× carry no information about the tolerable ratio.
 
+## 1b. Same pilot with a stronger reader: Qwen2.5-7B (full float16)
+
+**Setup:** identical to §1 (same 20 queries, same rates, **identical compressed inputs** —
+verified: same actual ratios), reader Qwen2.5-7B-Instruct in float16 split over 2 × T4.
+Data: `results/pilot_7b.json` · comparison: `python plot_results.py results/pilot_3b.json --compare results/pilot_7b.json`.
+
+| Target rate | Actual ratio | Greedy EM | Greedy F1 | Sampled F1 (mean of 5) | F1 std across runs |
+|---|---|---|---|---|---|
+| 1.00 | 1.00× | 0.50 | 0.59 | 0.59 | 0.004 |
+| 0.80 | 1.52× | 0.20 | 0.42 | 0.42 | 0.006 |
+| 0.50 | 3.24× | 0.35 | 0.48 | 0.47 | 0.022 |
+| 0.33 | 4.73× | 0.20 | 0.33 | 0.37 | 0.052 |
+
+**Findings**
+
+1. **Non-monotonic curves persist with the stronger reader.** Queries whose F1 rises by >0.2
+   between two consecutive ratios: 3B 7/20, 7B 6/20, **same query in both: 3/20** (Q2, Q6, Q16).
+   Most jumps are therefore reader-specific; a few appear with both readers on identical inputs.
+2. **The "max safe ratio" depends on the reader.** Same query, same compressed texts, different
+   label: Q3 → 3B 3.40×, 7B 1.00×; Q9 → 3B 1.37×, 7B 4.91×. A ratio estimator is reader-specific.
+3. **Label rules disagree slightly more with the 7B:** 2 of 12 usable queries (Q6, Q10) vs 0 of 11
+   for the 3B (sampled scores).
+4. **Run-to-run variability stays small** (std ≤ 0.052 F1; at most 1/20 queries flip).
+5. Higher uncompressed baseline (F1 0.59 vs 0.50), but a sharper drop at 1.5× (0.42 vs 0.49).
+   All on 20 queries: indicative only.
+
 ## 2. Reader choice (uncompressed baseline, 20 queries, greedy)
 
 | Reader | EM | F1 | Runtime (Kaggle T4) |

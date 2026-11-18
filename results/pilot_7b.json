@@ -1,0 +1,3144 @@
+{
+  "config": {
+    "reader": "Qwen/Qwen2.5-7B-Instruct",
+    "compressor": "microsoft/llmlingua-2-xlm-roberta-large-meetingbank",
+    "n_queries": 20,
+    "offset": 0,
+    "rates": [
+      1.0,
+      0.8,
+      0.5,
+      0.33
+    ],
+    "samples": 5,
+    "temperature": 0.7,
+    "max_new_tokens": 32,
+    "seed": 0,
+    "dtype": "float16",
+    "load_in_4bit": false,
+    "multi_gpu": true,
+    "out": "/kaggle/working/pilot_7b"
+  },
+  "rows": [
+    {
+      "query_index": 0,
+      "id": "5a8b57f25542995d1e6f1371",
+      "type": "comparison",
+      "question": "Were Scott Derrickson and Ed Wood of the same nationality?",
+      "gold": "yes",
+      "target_rate": 1.0,
+      "context_tokens": 1230,
+      "full_context_tokens": 1230,
+      "actual_ratio": 1.0,
+      "greedy_answer": "no",
+      "greedy_em": 0.0,
+      "greedy_f1": 0.0,
+      "sampled_answers": [
+        "no",
+        "no",
+        "no",
+        "no",
+        "no"
+      ],
+      "sampled_em": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1_mean": 0.0,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.0,
+      "gold_prob_per_token": 0.0
+    },
+    {
+      "query_index": 0,
+      "id": "5a8b57f25542995d1e6f1371",
+      "type": "comparison",
+      "question": "Were Scott Derrickson and Ed Wood of the same nationality?",
+      "gold": "yes",
+      "target_rate": 0.8,
+      "context_tokens": 858,
+      "full_context_tokens": 1230,
+      "actual_ratio": 1.434,
+      "greedy_answer": "no",
+      "greedy_em": 0.0,
+      "greedy_f1": 0.0,
+      "sampled_answers": [
+        "no",
+        "no",
+        "no",
+        "no",
+        "no"
+      ],
+      "sampled_em": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1_mean": 0.0,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.00393,
+      "gold_prob_per_token": 0.00393
+    },
+    {
+      "query_index": 0,
+      "id": "5a8b57f25542995d1e6f1371",
+      "type": "comparison",
+      "question": "Were Scott Derrickson and Ed Wood of the same nationality?",
+      "gold": "yes",
+      "target_rate": 0.5,
+      "context_tokens": 371,
+      "full_context_tokens": 1230,
+      "actual_ratio": 3.315,
+      "greedy_answer": "no",
+      "greedy_em": 0.0,
+      "greedy_f1": 0.0,
+      "sampled_answers": [
+        "no",
+        "no",
+        "no",
+        "no",
+        "no"
+      ],
+      "sampled_em": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1_mean": 0.0,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.0,
+      "gold_prob_per_token": 0.0
+    },
+    {
+      "query_index": 0,
+      "id": "5a8b57f25542995d1e6f1371",
+      "type": "comparison",
+      "question": "Were Scott Derrickson and Ed Wood of the same nationality?",
+      "gold": "yes",
+      "target_rate": 0.33,
+      "context_tokens": 271,
+      "full_context_tokens": 1230,
+      "actual_ratio": 4.539,
+      "greedy_answer": "No",
+      "greedy_em": 0.0,
+      "greedy_f1": 0.0,
+      "sampled_answers": [
+        "No",
+        "no",
+        "No",
+        "No",
+        "No"
+      ],
+      "sampled_em": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1_mean": 0.0,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.0,
+      "gold_prob_per_token": 0.0
+    },
+    {
+      "query_index": 1,
+      "id": "5a8c7595554299585d9e36b6",
+      "type": "bridge",
+      "question": "What government position was held by the woman who portrayed Corliss Archer in the film Kiss and Tell?",
+      "gold": "Chief of Protocol",
+      "target_rate": 1.0,
+      "context_tokens": 1365,
+      "full_context_tokens": 1365,
+      "actual_ratio": 1.0,
+      "greedy_answer": "Shirley Temple Black",
+      "greedy_em": 0.0,
+      "greedy_f1": 0.0,
+      "sampled_answers": [
+        "Secretary of State for Constitutional Affairs",
+        "Shirley Temple Black",
+        "Shiree Vereen",
+        "Shirley Temple Black",
+        "United States ambassador"
+      ],
+      "sampled_em": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1": [
+        0.2222,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1_mean": 0.0444,
+      "sampled_f1_std": 0.0889,
+      "gold_prob": 2e-05,
+      "gold_prob_per_token": 0.02528
+    },
+    {
+      "query_index": 1,
+      "id": "5a8c7595554299585d9e36b6",
+      "type": "bridge",
+      "question": "What government position was held by the woman who portrayed Corliss Archer in the film Kiss and Tell?",
+      "gold": "Chief of Protocol",
+      "target_rate": 0.8,
+      "context_tokens": 953,
+      "full_context_tokens": 1365,
+      "actual_ratio": 1.432,
+      "greedy_answer": "United States ambassador",
+      "greedy_em": 0.0,
+      "greedy_f1": 0.0,
+      "sampled_answers": [
+        "United States ambassador",
+        "United States ambassador",
+        "United States ambassador",
+        "United States ambassador",
+        "United States ambassador"
+      ],
+      "sampled_em": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1_mean": 0.0,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 1e-05,
+      "gold_prob_per_token": 0.02041
+    },
+    {
+      "query_index": 1,
+      "id": "5a8c7595554299585d9e36b6",
+      "type": "bridge",
+      "question": "What government position was held by the woman who portrayed Corliss Archer in the film Kiss and Tell?",
+      "gold": "Chief of Protocol",
+      "target_rate": 0.5,
+      "context_tokens": 557,
+      "full_context_tokens": 1365,
+      "actual_ratio": 2.451,
+      "greedy_answer": "no",
+      "greedy_em": 0.0,
+      "greedy_f1": 0.0,
+      "sampled_answers": [
+        "no",
+        "no",
+        "no",
+        "no",
+        "no"
+      ],
+      "sampled_em": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1_mean": 0.0,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.0,
+      "gold_prob_per_token": 0.00223
+    },
+    {
+      "query_index": 1,
+      "id": "5a8c7595554299585d9e36b6",
+      "type": "bridge",
+      "question": "What government position was held by the woman who portrayed Corliss Archer in the film Kiss and Tell?",
+      "gold": "Chief of Protocol",
+      "target_rate": 0.33,
+      "context_tokens": 372,
+      "full_context_tokens": 1365,
+      "actual_ratio": 3.669,
+      "greedy_answer": "ambassador",
+      "greedy_em": 0.0,
+      "greedy_f1": 0.0,
+      "sampled_answers": [
+        "ambassador",
+        "ambassador",
+        "ambassador Ghana Czechoslovakia Chief Protocol",
+        "ambassador",
+        "ambassador Ghana"
+      ],
+      "sampled_em": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1": [
+        0.0,
+        0.0,
+        0.5,
+        0.0,
+        0.0
+      ],
+      "sampled_f1_mean": 0.1,
+      "sampled_f1_std": 0.2,
+      "gold_prob": 0.0,
+      "gold_prob_per_token": 0.00644
+    },
+    {
+      "query_index": 2,
+      "id": "5a85ea095542994775f606a8",
+      "type": "bridge",
+      "question": "What science fantasy young adult series, told in first person, has a set of companion books narrating the stories of enslaved worlds and alien species?",
+      "gold": "Animorphs",
+      "target_rate": 1.0,
+      "context_tokens": 1567,
+      "full_context_tokens": 1567,
+      "actual_ratio": 1.0,
+      "greedy_answer": "The Hork-Bajir Chronicles",
+      "greedy_em": 0.0,
+      "greedy_f1": 0.0,
+      "sampled_answers": [
+        "The Hork-Bajir Chronicles",
+        "The Hork-Bajir Chronicles",
+        "The Hork-Bajir Chronicles",
+        "The Hork-Bajir Chronicles",
+        "The Hork-Bajir Chronicles"
+      ],
+      "sampled_em": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1_mean": 0.0,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.0,
+      "gold_prob_per_token": 0.00023
+    },
+    {
+      "query_index": 2,
+      "id": "5a85ea095542994775f606a8",
+      "type": "bridge",
+      "question": "What science fantasy young adult series, told in first person, has a set of companion books narrating the stories of enslaved worlds and alien species?",
+      "gold": "Animorphs",
+      "target_rate": 0.8,
+      "context_tokens": 1155,
+      "full_context_tokens": 1567,
+      "actual_ratio": 1.357,
+      "greedy_answer": "The Hork-Bajir Chronicles",
+      "greedy_em": 0.0,
+      "greedy_f1": 0.0,
+      "sampled_answers": [
+        "Hork-Bajir Chronicles",
+        "Hork-Bajir Chronicles",
+        "Hork-Bajir Chronicles",
+        "The Hork-Bajir Chronicles",
+        "Hork-Bajir Chronicles"
+      ],
+      "sampled_em": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1_mean": 0.0,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.0,
+      "gold_prob_per_token": 0.0169
+    },
+    {
+      "query_index": 2,
+      "id": "5a85ea095542994775f606a8",
+      "type": "bridge",
+      "question": "What science fantasy young adult series, told in first person, has a set of companion books narrating the stories of enslaved worlds and alien species?",
+      "gold": "Animorphs",
+      "target_rate": 0.5,
+      "context_tokens": 517,
+      "full_context_tokens": 1567,
+      "actual_ratio": 3.031,
+      "greedy_answer": "Animorphs",
+      "greedy_em": 1.0,
+      "greedy_f1": 1.0,
+      "sampled_answers": [
+        "Animorphs",
+        "Animorphs",
+        "Animorphs",
+        "Divide trilogy",
+        "Animorphs"
+      ],
+      "sampled_em": [
+        1.0,
+        1.0,
+        1.0,
+        0.0,
+        1.0
+      ],
+      "sampled_f1": [
+        1.0,
+        1.0,
+        1.0,
+        0.0,
+        1.0
+      ],
+      "sampled_f1_mean": 0.8,
+      "sampled_f1_std": 0.4,
+      "gold_prob": 0.61313,
+      "gold_prob_per_token": 0.84954
+    },
+    {
+      "query_index": 2,
+      "id": "5a85ea095542994775f606a8",
+      "type": "bridge",
+      "question": "What science fantasy young adult series, told in first person, has a set of companion books narrating the stories of enslaved worlds and alien species?",
+      "gold": "Animorphs",
+      "target_rate": 0.33,
+      "context_tokens": 350,
+      "full_context_tokens": 1567,
+      "actual_ratio": 4.477,
+      "greedy_answer": "Fantasy Impulse SF",
+      "greedy_em": 0.0,
+      "greedy_f1": 0.0,
+      "sampled_answers": [
+        "Impulse",
+        "Fantasy Impulse SF",
+        "Divide trilogy",
+        "Divide trilogy",
+        "Fantasy Impulse SF"
+      ],
+      "sampled_em": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1_mean": 0.0,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.0,
+      "gold_prob_per_token": 0.00439
+    },
+    {
+      "query_index": 3,
+      "id": "5adbf0a255429947ff17385a",
+      "type": "comparison",
+      "question": "Are the Laleli Mosque and Esma Sultan Mansion located in the same neighborhood?",
+      "gold": "no",
+      "target_rate": 1.0,
+      "context_tokens": 1044,
+      "full_context_tokens": 1044,
+      "actual_ratio": 1.0,
+      "greedy_answer": "no",
+      "greedy_em": 1.0,
+      "greedy_f1": 1.0,
+      "sampled_answers": [
+        "no",
+        "no",
+        "no",
+        "no",
+        "no"
+      ],
+      "sampled_em": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sampled_f1": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sampled_f1_mean": 1.0,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.99512,
+      "gold_prob_per_token": 0.99512
+    },
+    {
+      "query_index": 3,
+      "id": "5adbf0a255429947ff17385a",
+      "type": "comparison",
+      "question": "Are the Laleli Mosque and Esma Sultan Mansion located in the same neighborhood?",
+      "gold": "no",
+      "target_rate": 0.8,
+      "context_tokens": 827,
+      "full_context_tokens": 1044,
+      "actual_ratio": 1.262,
+      "greedy_answer": "yes",
+      "greedy_em": 0.0,
+      "greedy_f1": 0.0,
+      "sampled_answers": [
+        "yes",
+        "yes",
+        "yes",
+        "yes",
+        "yes"
+      ],
+      "sampled_em": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1_mean": 0.0,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 2e-05,
+      "gold_prob_per_token": 2e-05
+    },
+    {
+      "query_index": 3,
+      "id": "5adbf0a255429947ff17385a",
+      "type": "comparison",
+      "question": "Are the Laleli Mosque and Esma Sultan Mansion located in the same neighborhood?",
+      "gold": "no",
+      "target_rate": 0.5,
+      "context_tokens": 307,
+      "full_context_tokens": 1044,
+      "actual_ratio": 3.401,
+      "greedy_answer": "yes",
+      "greedy_em": 0.0,
+      "greedy_f1": 0.0,
+      "sampled_answers": [
+        "yes",
+        "yes",
+        "yes",
+        "yes",
+        "yes"
+      ],
+      "sampled_em": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1_mean": 0.0,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 7e-05,
+      "gold_prob_per_token": 7e-05
+    },
+    {
+      "query_index": 3,
+      "id": "5adbf0a255429947ff17385a",
+      "type": "comparison",
+      "question": "Are the Laleli Mosque and Esma Sultan Mansion located in the same neighborhood?",
+      "gold": "no",
+      "target_rate": 0.33,
+      "context_tokens": 197,
+      "full_context_tokens": 1044,
+      "actual_ratio": 5.299,
+      "greedy_answer": "yes",
+      "greedy_em": 0.0,
+      "greedy_f1": 0.0,
+      "sampled_answers": [
+        "yes",
+        "yes",
+        "yes",
+        "yes",
+        "yes"
+      ],
+      "sampled_em": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1_mean": 0.0,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.05303,
+      "gold_prob_per_token": 0.05303
+    },
+    {
+      "query_index": 4,
+      "id": "5a8e3ea95542995a26add48d",
+      "type": "bridge",
+      "question": "The director of the romantic comedy \"Big Stone Gap\" is based in what New York city?",
+      "gold": "Greenwich Village, New York City",
+      "target_rate": 1.0,
+      "context_tokens": 1373,
+      "full_context_tokens": 1373,
+      "actual_ratio": 1.0,
+      "greedy_answer": "Greenwich Village",
+      "greedy_em": 0.0,
+      "greedy_f1": 0.5714,
+      "sampled_answers": [
+        "Greenwich Village",
+        "Greenwich Village",
+        "Greenwich Village",
+        "Greenwich Village",
+        "Greenwich Village"
+      ],
+      "sampled_em": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1": [
+        0.5714,
+        0.5714,
+        0.5714,
+        0.5714,
+        0.5714
+      ],
+      "sampled_f1_mean": 0.5714,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.0,
+      "gold_prob_per_token": 0.04238
+    },
+    {
+      "query_index": 4,
+      "id": "5a8e3ea95542995a26add48d",
+      "type": "bridge",
+      "question": "The director of the romantic comedy \"Big Stone Gap\" is based in what New York city?",
+      "gold": "Greenwich Village, New York City",
+      "target_rate": 0.8,
+      "context_tokens": 740,
+      "full_context_tokens": 1373,
+      "actual_ratio": 1.855,
+      "greedy_answer": "Greenwich Village",
+      "greedy_em": 0.0,
+      "greedy_f1": 0.5714,
+      "sampled_answers": [
+        "Greenwich Village",
+        "Greenwich Village",
+        "Greenwich Village",
+        "Greenwich Village",
+        "Greenwich Village"
+      ],
+      "sampled_em": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1": [
+        0.5714,
+        0.5714,
+        0.5714,
+        0.5714,
+        0.5714
+      ],
+      "sampled_f1_mean": 0.5714,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.00029,
+      "gold_prob_per_token": 0.31249
+    },
+    {
+      "query_index": 4,
+      "id": "5a8e3ea95542995a26add48d",
+      "type": "bridge",
+      "question": "The director of the romantic comedy \"Big Stone Gap\" is based in what New York city?",
+      "gold": "Greenwich Village, New York City",
+      "target_rate": 0.5,
+      "context_tokens": 377,
+      "full_context_tokens": 1373,
+      "actual_ratio": 3.642,
+      "greedy_answer": "New York City",
+      "greedy_em": 0.0,
+      "greedy_f1": 0.75,
+      "sampled_answers": [
+        "New York City",
+        "New York City",
+        "New York City",
+        "New York City",
+        "New York City"
+      ],
+      "sampled_em": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1": [
+        0.75,
+        0.75,
+        0.75,
+        0.75,
+        0.75
+      ],
+      "sampled_f1_mean": 0.75,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.0,
+      "gold_prob_per_token": 0.0051
+    },
+    {
+      "query_index": 4,
+      "id": "5a8e3ea95542995a26add48d",
+      "type": "bridge",
+      "question": "The director of the romantic comedy \"Big Stone Gap\" is based in what New York city?",
+      "gold": "Greenwich Village, New York City",
+      "target_rate": 0.33,
+      "context_tokens": 264,
+      "full_context_tokens": 1373,
+      "actual_ratio": 5.201,
+      "greedy_answer": "Greenwich Village",
+      "greedy_em": 0.0,
+      "greedy_f1": 0.5714,
+      "sampled_answers": [
+        "Greenwich Village",
+        "Greenwich Village",
+        "New York",
+        "Greenwich Village",
+        "Greenwich Village"
+      ],
+      "sampled_em": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1": [
+        0.5714,
+        0.5714,
+        0.5714,
+        0.5714,
+        0.5714
+      ],
+      "sampled_f1_mean": 0.5714,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.0,
+      "gold_prob_per_token": 0.00444
+    },
+    {
+      "query_index": 5,
+      "id": "5abd94525542992ac4f382d2",
+      "type": "bridge",
+      "question": "2014 S/S is the debut album of a South Korean boy group that was formed by who?",
+      "gold": "YG Entertainment",
+      "target_rate": 1.0,
+      "context_tokens": 1412,
+      "full_context_tokens": 1412,
+      "actual_ratio": 1.0,
+      "greedy_answer": "YG Entertainment",
+      "greedy_em": 1.0,
+      "greedy_f1": 1.0,
+      "sampled_answers": [
+        "YG Entertainment",
+        "YG Entertainment",
+        "YG Entertainment",
+        "YG Entertainment",
+        "YG Entertainment"
+      ],
+      "sampled_em": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sampled_f1": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sampled_f1_mean": 1.0,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.99985,
+      "gold_prob_per_token": 0.99993
+    },
+    {
+      "query_index": 5,
+      "id": "5abd94525542992ac4f382d2",
+      "type": "bridge",
+      "question": "2014 S/S is the debut album of a South Korean boy group that was formed by who?",
+      "gold": "YG Entertainment",
+      "target_rate": 0.8,
+      "context_tokens": 1092,
+      "full_context_tokens": 1412,
+      "actual_ratio": 1.293,
+      "greedy_answer": "FNC Entertainment",
+      "greedy_em": 0.0,
+      "greedy_f1": 0.5,
+      "sampled_answers": [
+        "FNC Entertainment",
+        "FNC Entertainment",
+        "FNC Entertainment",
+        "FNC Entertainment",
+        "FNC Entertainment"
+      ],
+      "sampled_em": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1": [
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5
+      ],
+      "sampled_f1_mean": 0.5,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.0,
+      "gold_prob_per_token": 0.00054
+    },
+    {
+      "query_index": 5,
+      "id": "5abd94525542992ac4f382d2",
+      "type": "bridge",
+      "question": "2014 S/S is the debut album of a South Korean boy group that was formed by who?",
+      "gold": "YG Entertainment",
+      "target_rate": 0.5,
+      "context_tokens": 557,
+      "full_context_tokens": 1412,
+      "actual_ratio": 2.535,
+      "greedy_answer": "J. Tune Camp",
+      "greedy_em": 0.0,
+      "greedy_f1": 0.0,
+      "sampled_answers": [
+        "J. Tune Camp",
+        "J. Tune Camp",
+        "J. Tune Camp",
+        "J. Tune Camp",
+        "J. Tune Camp"
+      ],
+      "sampled_em": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1_mean": 0.0,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.0,
+      "gold_prob_per_token": 0.0
+    },
+    {
+      "query_index": 5,
+      "id": "5abd94525542992ac4f382d2",
+      "type": "bridge",
+      "question": "2014 S/S is the debut album of a South Korean boy group that was formed by who?",
+      "gold": "YG Entertainment",
+      "target_rate": 0.33,
+      "context_tokens": 386,
+      "full_context_tokens": 1412,
+      "actual_ratio": 3.658,
+      "greedy_answer": "Tune Camp",
+      "greedy_em": 0.0,
+      "greedy_f1": 0.0,
+      "sampled_answers": [
+        "Tune Camp",
+        "Tune Camp",
+        "Tune Camp",
+        "Tune Camp",
+        "Tune Camp"
+      ],
+      "sampled_em": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1_mean": 0.0,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.0,
+      "gold_prob_per_token": 2e-05
+    },
+    {
+      "query_index": 6,
+      "id": "5a85b2d95542997b5ce40028",
+      "type": "bridge",
+      "question": "Who was known by his stage name Aladin and helped organizations improve their performance as a consultant?",
+      "gold": "Eenasul Fateh",
+      "target_rate": 1.0,
+      "context_tokens": 1916,
+      "full_context_tokens": 1916,
+      "actual_ratio": 1.0,
+      "greedy_answer": "Eenasul Fateh",
+      "greedy_em": 1.0,
+      "greedy_f1": 1.0,
+      "sampled_answers": [
+        "Eenasul Fateh",
+        "Eenasul Fateh",
+        "Eenasul Fateh",
+        "Eenasul Fateh",
+        "Eenasul Fateh"
+      ],
+      "sampled_em": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sampled_f1": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sampled_f1_mean": 1.0,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.99026,
+      "gold_prob_per_token": 0.99804
+    },
+    {
+      "query_index": 6,
+      "id": "5a85b2d95542997b5ce40028",
+      "type": "bridge",
+      "question": "Who was known by his stage name Aladin and helped organizations improve their performance as a consultant?",
+      "gold": "Eenasul Fateh",
+      "target_rate": 0.8,
+      "context_tokens": 1494,
+      "full_context_tokens": 1916,
+      "actual_ratio": 1.282,
+      "greedy_answer": "Eenasul Fateh Fateh",
+      "greedy_em": 0.0,
+      "greedy_f1": 0.8,
+      "sampled_answers": [
+        "Eenasul Fateh Fateh",
+        "Eenasul Fateh Fateh",
+        "Eenasul Fateh Fateh",
+        "Eenasul Fateh Fateh (Bengali: ঈনাসুল ফাতেহ)",
+        "Eenasul Fateh Fateh"
+      ],
+      "sampled_em": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1": [
+        0.8,
+        0.8,
+        0.8,
+        0.5,
+        0.8
+      ],
+      "sampled_f1_mean": 0.74,
+      "sampled_f1_std": 0.12,
+      "gold_prob": 0.83056,
+      "gold_prob_per_token": 0.96355
+    },
+    {
+      "query_index": 6,
+      "id": "5a85b2d95542997b5ce40028",
+      "type": "bridge",
+      "question": "Who was known by his stage name Aladin and helped organizations improve their performance as a consultant?",
+      "gold": "Eenasul Fateh",
+      "target_rate": 0.5,
+      "context_tokens": 649,
+      "full_context_tokens": 1916,
+      "actual_ratio": 2.952,
+      "greedy_answer": "Eenasul Fateh",
+      "greedy_em": 1.0,
+      "greedy_f1": 1.0,
+      "sampled_answers": [
+        "Eenasul Fateh",
+        "Eenasul Fateh",
+        "Eenasul Fateh",
+        "Eenasul Fateh",
+        "Eenasul Fateh"
+      ],
+      "sampled_em": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sampled_f1": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sampled_f1_mean": 1.0,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.92136,
+      "gold_prob_per_token": 0.98375
+    },
+    {
+      "query_index": 6,
+      "id": "5a85b2d95542997b5ce40028",
+      "type": "bridge",
+      "question": "Who was known by his stage name Aladin and helped organizations improve their performance as a consultant?",
+      "gold": "Eenasul Fateh",
+      "target_rate": 0.33,
+      "context_tokens": 433,
+      "full_context_tokens": 1916,
+      "actual_ratio": 4.425,
+      "greedy_answer": "Fateh 3 April Aladin",
+      "greedy_em": 0.0,
+      "greedy_f1": 0.3333,
+      "sampled_answers": [
+        "Fateh 3 April Aladin",
+        "Fateh 3 April Aladin",
+        "Fateh Aladin",
+        "Fateh 3 April Aladin",
+        "Fateh Aladin"
+      ],
+      "sampled_em": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1": [
+        0.3333,
+        0.3333,
+        0.5,
+        0.3333,
+        0.5
+      ],
+      "sampled_f1_mean": 0.4,
+      "sampled_f1_std": 0.0816,
+      "gold_prob": 0.0,
+      "gold_prob_per_token": 1e-05
+    },
+    {
+      "query_index": 7,
+      "id": "5a87ab905542996e4f3088c1",
+      "type": "bridge",
+      "question": "The arena where the Lewiston Maineiacs played their home games can seat how many people?",
+      "gold": "3,677 seated",
+      "target_rate": 1.0,
+      "context_tokens": 3038,
+      "full_context_tokens": 3038,
+      "actual_ratio": 1.0,
+      "greedy_answer": "4,000",
+      "greedy_em": 0.0,
+      "greedy_f1": 0.0,
+      "sampled_answers": [
+        "4,000",
+        "4,000",
+        "4,000",
+        "4,000",
+        "4,000"
+      ],
+      "sampled_em": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1_mean": 0.0,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.00017,
+      "gold_prob_per_token": 0.23496
+    },
+    {
+      "query_index": 7,
+      "id": "5a87ab905542996e4f3088c1",
+      "type": "bridge",
+      "question": "The arena where the Lewiston Maineiacs played their home games can seat how many people?",
+      "gold": "3,677 seated",
+      "target_rate": 0.8,
+      "context_tokens": 1211,
+      "full_context_tokens": 3038,
+      "actual_ratio": 2.509,
+      "greedy_answer": "4,000",
+      "greedy_em": 0.0,
+      "greedy_f1": 0.0,
+      "sampled_answers": [
+        "4,000",
+        "4,000",
+        "4,000",
+        "4,000",
+        "4,000"
+      ],
+      "sampled_em": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1_mean": 0.0,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 1e-05,
+      "gold_prob_per_token": 0.15484
+    },
+    {
+      "query_index": 7,
+      "id": "5a87ab905542996e4f3088c1",
+      "type": "bridge",
+      "question": "The arena where the Lewiston Maineiacs played their home games can seat how many people?",
+      "gold": "3,677 seated",
+      "target_rate": 0.5,
+      "context_tokens": 674,
+      "full_context_tokens": 3038,
+      "actual_ratio": 4.507,
+      "greedy_answer": "4,000",
+      "greedy_em": 0.0,
+      "greedy_f1": 0.0,
+      "sampled_answers": [
+        "4,000",
+        "4,000",
+        "4,000",
+        "4,000",
+        "4,000"
+      ],
+      "sampled_em": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1_mean": 0.0,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.0,
+      "gold_prob_per_token": 0.07969
+    },
+    {
+      "query_index": 7,
+      "id": "5a87ab905542996e4f3088c1",
+      "type": "bridge",
+      "question": "The arena where the Lewiston Maineiacs played their home games can seat how many people?",
+      "gold": "3,677 seated",
+      "target_rate": 0.33,
+      "context_tokens": 453,
+      "full_context_tokens": 3038,
+      "actual_ratio": 6.706,
+      "greedy_answer": "4,000",
+      "greedy_em": 0.0,
+      "greedy_f1": 0.0,
+      "sampled_answers": [
+        "4,000",
+        "4,000",
+        "4,000",
+        "4,000",
+        "4,000"
+      ],
+      "sampled_em": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1_mean": 0.0,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 8e-05,
+      "gold_prob_per_token": 0.20628
+    },
+    {
+      "query_index": 8,
+      "id": "5a7bbb64554299042af8f7cc",
+      "type": "bridge",
+      "question": "Who is older, Annie Morton or Terry Richardson?",
+      "gold": "Terry Richardson",
+      "target_rate": 1.0,
+      "context_tokens": 1377,
+      "full_context_tokens": 1377,
+      "actual_ratio": 1.0,
+      "greedy_answer": "Annie Morton",
+      "greedy_em": 0.0,
+      "greedy_f1": 0.0,
+      "sampled_answers": [
+        "Annie Morton",
+        "Annie Morton",
+        "Annie Morton",
+        "Annie Morton",
+        "Annie Morton"
+      ],
+      "sampled_em": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1_mean": 0.0,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.00143,
+      "gold_prob_per_token": 0.11272
+    },
+    {
+      "query_index": 8,
+      "id": "5a7bbb64554299042af8f7cc",
+      "type": "bridge",
+      "question": "Who is older, Annie Morton or Terry Richardson?",
+      "gold": "Terry Richardson",
+      "target_rate": 0.8,
+      "context_tokens": 942,
+      "full_context_tokens": 1377,
+      "actual_ratio": 1.462,
+      "greedy_answer": "Annie Morton",
+      "greedy_em": 0.0,
+      "greedy_f1": 0.0,
+      "sampled_answers": [
+        "Annie Morton",
+        "Annie Morton",
+        "Annie Morton",
+        "Annie Morton",
+        "Annie Morton"
+      ],
+      "sampled_em": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1_mean": 0.0,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.18234,
+      "gold_prob_per_token": 0.56706
+    },
+    {
+      "query_index": 8,
+      "id": "5a7bbb64554299042af8f7cc",
+      "type": "bridge",
+      "question": "Who is older, Annie Morton or Terry Richardson?",
+      "gold": "Terry Richardson",
+      "target_rate": 0.5,
+      "context_tokens": 421,
+      "full_context_tokens": 1377,
+      "actual_ratio": 3.271,
+      "greedy_answer": "Annie Morton's birth year is not provided in the given documents, while Terry Richardson was born on August 14, 1965. Therefore",
+      "greedy_em": 0.0,
+      "greedy_f1": 0.1818,
+      "sampled_answers": [
+        "Annie Morton's age is not provided, and Terry Richardson was born on August 14, 1965. Therefore, based on the given",
+        "Annie Morton's birth year is not provided in the given text. Terry Richardson was born on August 14, 1965. Therefore,",
+        "Annie Morton's age is not provided, and Terry Richardson was born on August 14, 1965. Therefore, based on the information",
+        "Annie Morton's birth year is not provided in the given documents, nor is her age compared to Terry Richardson's. Therefore, based on the information given,",
+        "Annie Morton's birth year is not provided, while Terry Richardson was born on August 14, 1965. Therefore, based on the"
+      ],
+      "sampled_em": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1": [
+        0.1905,
+        0.1905,
+        0.1905,
+        0.08,
+        0.1905
+      ],
+      "sampled_f1_mean": 0.1684,
+      "sampled_f1_std": 0.0442,
+      "gold_prob": 0.01242,
+      "gold_prob_per_token": 0.23157
+    },
+    {
+      "query_index": 8,
+      "id": "5a7bbb64554299042af8f7cc",
+      "type": "bridge",
+      "question": "Who is older, Annie Morton or Terry Richardson?",
+      "gold": "Terry Richardson",
+      "target_rate": 0.33,
+      "context_tokens": 304,
+      "full_context_tokens": 1377,
+      "actual_ratio": 4.53,
+      "greedy_answer": "Annie Morton's birth year is not provided in the given documents, nor is Terry Richardson's. The documents do not contain enough information to determine who is older",
+      "greedy_em": 0.0,
+      "greedy_f1": 0.0741,
+      "sampled_answers": [
+        "Annie Morton's birth year is not provided in the given documents, nor is there any information comparing the ages of Annie Morton and Terry Richardson directly. Therefore,",
+        "Annie Morton",
+        "Annie Morton's birth year is not provided in the given documents. Terry Richardson's birth year is also not directly provided, but we can infer that he was",
+        "Annie Morton's birth year is not provided in the given documents, nor is Terry Richardson's exact birth year. Therefore, based on the information given, it",
+        "Annie Morton's birth year is not provided, while Terry Richardson was born in 1965. Therefore, based on the given information, Terry Richardson"
+      ],
+      "sampled_em": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1": [
+        0.1481,
+        0.0,
+        0.0714,
+        0.08,
+        0.1739
+      ],
+      "sampled_f1_mean": 0.0947,
+      "sampled_f1_std": 0.0614,
+      "gold_prob": 0.19625,
+      "gold_prob_per_token": 0.58112
+    },
+    {
+      "query_index": 9,
+      "id": "5a8db19d5542994ba4e3dd00",
+      "type": "comparison",
+      "question": "Are Local H and For Against both from the United States?",
+      "gold": "yes",
+      "target_rate": 1.0,
+      "context_tokens": 1390,
+      "full_context_tokens": 1390,
+      "actual_ratio": 1.0,
+      "greedy_answer": "yes",
+      "greedy_em": 1.0,
+      "greedy_f1": 1.0,
+      "sampled_answers": [
+        "yes",
+        "yes",
+        "yes",
+        "yes",
+        "yes"
+      ],
+      "sampled_em": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sampled_f1": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sampled_f1_mean": 1.0,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.99442,
+      "gold_prob_per_token": 0.99442
+    },
+    {
+      "query_index": 9,
+      "id": "5a8db19d5542994ba4e3dd00",
+      "type": "comparison",
+      "question": "Are Local H and For Against both from the United States?",
+      "gold": "yes",
+      "target_rate": 0.8,
+      "context_tokens": 1015,
+      "full_context_tokens": 1390,
+      "actual_ratio": 1.369,
+      "greedy_answer": "yes",
+      "greedy_em": 1.0,
+      "greedy_f1": 1.0,
+      "sampled_answers": [
+        "yes",
+        "yes",
+        "yes",
+        "yes",
+        "yes"
+      ],
+      "sampled_em": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sampled_f1": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sampled_f1_mean": 1.0,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.99811,
+      "gold_prob_per_token": 0.99811
+    },
+    {
+      "query_index": 9,
+      "id": "5a8db19d5542994ba4e3dd00",
+      "type": "comparison",
+      "question": "Are Local H and For Against both from the United States?",
+      "gold": "yes",
+      "target_rate": 0.5,
+      "context_tokens": 414,
+      "full_context_tokens": 1390,
+      "actual_ratio": 3.357,
+      "greedy_answer": "yes",
+      "greedy_em": 1.0,
+      "greedy_f1": 1.0,
+      "sampled_answers": [
+        "yes",
+        "yes",
+        "yes",
+        "yes",
+        "yes"
+      ],
+      "sampled_em": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sampled_f1": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sampled_f1_mean": 1.0,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.99848,
+      "gold_prob_per_token": 0.99848
+    },
+    {
+      "query_index": 9,
+      "id": "5a8db19d5542994ba4e3dd00",
+      "type": "comparison",
+      "question": "Are Local H and For Against both from the United States?",
+      "gold": "yes",
+      "target_rate": 0.33,
+      "context_tokens": 283,
+      "full_context_tokens": 1390,
+      "actual_ratio": 4.912,
+      "greedy_answer": "yes",
+      "greedy_em": 1.0,
+      "greedy_f1": 1.0,
+      "sampled_answers": [
+        "yes",
+        "yes",
+        "yes",
+        "yes",
+        "yes"
+      ],
+      "sampled_em": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sampled_f1": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sampled_f1_mean": 1.0,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.99946,
+      "gold_prob_per_token": 0.99946
+    },
+    {
+      "query_index": 10,
+      "id": "5a7166395542994082a3e814",
+      "type": "bridge",
+      "question": "What is the name of the fight song of the university whose main campus is in Lawrence, Kansas and whose branch campuses are in the Kansas City metropolitan area?",
+      "gold": "Kansas Song",
+      "target_rate": 1.0,
+      "context_tokens": 1716,
+      "full_context_tokens": 1716,
+      "actual_ratio": 1.0,
+      "greedy_answer": "Kansas Song",
+      "greedy_em": 1.0,
+      "greedy_f1": 1.0,
+      "sampled_answers": [
+        "Kansas Song",
+        "Kansas Song",
+        "Kansas Song",
+        "Kansas Song",
+        "Kansas Song"
+      ],
+      "sampled_em": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sampled_f1": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sampled_f1_mean": 1.0,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.6352,
+      "gold_prob_per_token": 0.797
+    },
+    {
+      "query_index": 10,
+      "id": "5a7166395542994082a3e814",
+      "type": "bridge",
+      "question": "What is the name of the fight song of the university whose main campus is in Lawrence, Kansas and whose branch campuses are in the Kansas City metropolitan area?",
+      "gold": "Kansas Song",
+      "target_rate": 0.8,
+      "context_tokens": 1079,
+      "full_context_tokens": 1716,
+      "actual_ratio": 1.59,
+      "greedy_answer": "University of Kansas",
+      "greedy_em": 0.0,
+      "greedy_f1": 0.4,
+      "sampled_answers": [
+        "University of Kansas",
+        "University of Kansas",
+        "University of Kansas",
+        "University of Kansas",
+        "University of Kansas"
+      ],
+      "sampled_em": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1": [
+        0.4,
+        0.4,
+        0.4,
+        0.4,
+        0.4
+      ],
+      "sampled_f1_mean": 0.4,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.00081,
+      "gold_prob_per_token": 0.0285
+    },
+    {
+      "query_index": 10,
+      "id": "5a7166395542994082a3e814",
+      "type": "bridge",
+      "question": "What is the name of the fight song of the university whose main campus is in Lawrence, Kansas and whose branch campuses are in the Kansas City metropolitan area?",
+      "gold": "Kansas Song",
+      "target_rate": 0.5,
+      "context_tokens": 534,
+      "full_context_tokens": 1716,
+      "actual_ratio": 3.213,
+      "greedy_answer": "Kansas Song",
+      "greedy_em": 1.0,
+      "greedy_f1": 1.0,
+      "sampled_answers": [
+        "Kansas Song",
+        "Kansas Song",
+        "Kansas Song",
+        "Kansas Song",
+        "Kansas Song"
+      ],
+      "sampled_em": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sampled_f1": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sampled_f1_mean": 1.0,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.99259,
+      "gold_prob_per_token": 0.99629
+    },
+    {
+      "query_index": 10,
+      "id": "5a7166395542994082a3e814",
+      "type": "bridge",
+      "question": "What is the name of the fight song of the university whose main campus is in Lawrence, Kansas and whose branch campuses are in the Kansas City metropolitan area?",
+      "gold": "Kansas Song",
+      "target_rate": 0.33,
+      "context_tokens": 365,
+      "full_context_tokens": 1716,
+      "actual_ratio": 4.701,
+      "greedy_answer": "From Kansas",
+      "greedy_em": 0.0,
+      "greedy_f1": 0.5,
+      "sampled_answers": [
+        "From Kansas",
+        "From Kansas",
+        "From Kansas",
+        "From Kansas",
+        "From Kansas"
+      ],
+      "sampled_em": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1": [
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5
+      ],
+      "sampled_f1_mean": 0.5,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.0,
+      "gold_prob_per_token": 0.00093
+    },
+    {
+      "query_index": 11,
+      "id": "5a877e5d5542993e715abf7d",
+      "type": "bridge",
+      "question": "What screenwriter with credits for \"Evolution\" co-wrote a film starring Nicolas Cage and Téa Leoni?",
+      "gold": "David Weissman",
+      "target_rate": 1.0,
+      "context_tokens": 1295,
+      "full_context_tokens": 1295,
+      "actual_ratio": 1.0,
+      "greedy_answer": "David Weissman",
+      "greedy_em": 1.0,
+      "greedy_f1": 1.0,
+      "sampled_answers": [
+        "David Weissman",
+        "David Weissman",
+        "David Weissman",
+        "David Weissman",
+        "David Weissman"
+      ],
+      "sampled_em": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sampled_f1": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sampled_f1_mean": 1.0,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.99991,
+      "gold_prob_per_token": 0.99997
+    },
+    {
+      "query_index": 11,
+      "id": "5a877e5d5542993e715abf7d",
+      "type": "bridge",
+      "question": "What screenwriter with credits for \"Evolution\" co-wrote a film starring Nicolas Cage and Téa Leoni?",
+      "gold": "David Weissman",
+      "target_rate": 0.8,
+      "context_tokens": 986,
+      "full_context_tokens": 1295,
+      "actual_ratio": 1.313,
+      "greedy_answer": "David Diamond",
+      "greedy_em": 0.0,
+      "greedy_f1": 0.5,
+      "sampled_answers": [
+        "David Diamond",
+        "David Diamond",
+        "David Diamond",
+        "David Diamond",
+        "David Diamond"
+      ],
+      "sampled_em": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1": [
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5
+      ],
+      "sampled_f1_mean": 0.5,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.00162,
+      "gold_prob_per_token": 0.11748
+    },
+    {
+      "query_index": 11,
+      "id": "5a877e5d5542993e715abf7d",
+      "type": "bridge",
+      "question": "What screenwriter with credits for \"Evolution\" co-wrote a film starring Nicolas Cage and Téa Leoni?",
+      "gold": "David Weissman",
+      "target_rate": 0.5,
+      "context_tokens": 385,
+      "full_context_tokens": 1295,
+      "actual_ratio": 3.364,
+      "greedy_answer": "David Diamond",
+      "greedy_em": 0.0,
+      "greedy_f1": 0.5,
+      "sampled_answers": [
+        "David Diamond",
+        "David Diamond",
+        "David Diamond",
+        "David Diamond",
+        "David Diamond"
+      ],
+      "sampled_em": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1": [
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5
+      ],
+      "sampled_f1_mean": 0.5,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 2e-05,
+      "gold_prob_per_token": 0.02912
+    },
+    {
+      "query_index": 11,
+      "id": "5a877e5d5542993e715abf7d",
+      "type": "bridge",
+      "question": "What screenwriter with credits for \"Evolution\" co-wrote a film starring Nicolas Cage and Téa Leoni?",
+      "gold": "David Weissman",
+      "target_rate": 0.33,
+      "context_tokens": 261,
+      "full_context_tokens": 1295,
+      "actual_ratio": 4.962,
+      "greedy_answer": "Brett Ratner",
+      "greedy_em": 0.0,
+      "greedy_f1": 0.0,
+      "sampled_answers": [
+        "Brett Ratner",
+        "Brett Ratner",
+        "Brett Ratner",
+        "David Diamond",
+        "Brett Ratner"
+      ],
+      "sampled_em": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1": [
+        0.0,
+        0.0,
+        0.0,
+        0.5,
+        0.0
+      ],
+      "sampled_f1_mean": 0.1,
+      "sampled_f1_std": 0.2,
+      "gold_prob": 0.0,
+      "gold_prob_per_token": 0.00132
+    },
+    {
+      "query_index": 12,
+      "id": "5ab3b0bf5542992ade7c6e39",
+      "type": "bridge",
+      "question": "What year did Guns N Roses perform a promo for a movie starring Arnold Schwarzenegger as a former New York Police detective?",
+      "gold": "1999",
+      "target_rate": 1.0,
+      "context_tokens": 1548,
+      "full_context_tokens": 1548,
+      "actual_ratio": 1.0,
+      "greedy_answer": "1999",
+      "greedy_em": 1.0,
+      "greedy_f1": 1.0,
+      "sampled_answers": [
+        "1999",
+        "1999",
+        "1999",
+        "1999",
+        "1999"
+      ],
+      "sampled_em": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sampled_f1": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sampled_f1_mean": 1.0,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 1.0,
+      "gold_prob_per_token": 1.0
+    },
+    {
+      "query_index": 12,
+      "id": "5ab3b0bf5542992ade7c6e39",
+      "type": "bridge",
+      "question": "What year did Guns N Roses perform a promo for a movie starring Arnold Schwarzenegger as a former New York Police detective?",
+      "gold": "1999",
+      "target_rate": 0.8,
+      "context_tokens": 1132,
+      "full_context_tokens": 1548,
+      "actual_ratio": 1.367,
+      "greedy_answer": "1999",
+      "greedy_em": 1.0,
+      "greedy_f1": 1.0,
+      "sampled_answers": [
+        "1999",
+        "1999",
+        "1999",
+        "1999",
+        "1999"
+      ],
+      "sampled_em": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sampled_f1": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sampled_f1_mean": 1.0,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 1.0,
+      "gold_prob_per_token": 1.0
+    },
+    {
+      "query_index": 12,
+      "id": "5ab3b0bf5542992ade7c6e39",
+      "type": "bridge",
+      "question": "What year did Guns N Roses perform a promo for a movie starring Arnold Schwarzenegger as a former New York Police detective?",
+      "gold": "1999",
+      "target_rate": 0.5,
+      "context_tokens": 465,
+      "full_context_tokens": 1548,
+      "actual_ratio": 3.329,
+      "greedy_answer": "1999",
+      "greedy_em": 1.0,
+      "greedy_f1": 1.0,
+      "sampled_answers": [
+        "1999",
+        "1999",
+        "1999",
+        "1999",
+        "1999"
+      ],
+      "sampled_em": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sampled_f1": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sampled_f1_mean": 1.0,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 1.0,
+      "gold_prob_per_token": 1.0
+    },
+    {
+      "query_index": 12,
+      "id": "5ab3b0bf5542992ade7c6e39",
+      "type": "bridge",
+      "question": "What year did Guns N Roses perform a promo for a movie starring Arnold Schwarzenegger as a former New York Police detective?",
+      "gold": "1999",
+      "target_rate": 0.33,
+      "context_tokens": 311,
+      "full_context_tokens": 1548,
+      "actual_ratio": 4.977,
+      "greedy_answer": "1999",
+      "greedy_em": 1.0,
+      "greedy_f1": 1.0,
+      "sampled_answers": [
+        "1999",
+        "1999",
+        "1999",
+        "1999",
+        "1999"
+      ],
+      "sampled_em": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sampled_f1": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sampled_f1_mean": 1.0,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.99764,
+      "gold_prob_per_token": 0.99941
+    },
+    {
+      "query_index": 13,
+      "id": "5ab56e32554299637185c594",
+      "type": "comparison",
+      "question": "Are Random House Tower and 888 7th Avenue both used for real estate?",
+      "gold": "no",
+      "target_rate": 1.0,
+      "context_tokens": 2745,
+      "full_context_tokens": 2745,
+      "actual_ratio": 1.0,
+      "greedy_answer": "no",
+      "greedy_em": 1.0,
+      "greedy_f1": 1.0,
+      "sampled_answers": [
+        "no",
+        "no",
+        "no",
+        "no",
+        "no"
+      ],
+      "sampled_em": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sampled_f1": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sampled_f1_mean": 1.0,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.99578,
+      "gold_prob_per_token": 0.99578
+    },
+    {
+      "query_index": 13,
+      "id": "5ab56e32554299637185c594",
+      "type": "comparison",
+      "question": "Are Random House Tower and 888 7th Avenue both used for real estate?",
+      "gold": "no",
+      "target_rate": 0.8,
+      "context_tokens": 948,
+      "full_context_tokens": 2745,
+      "actual_ratio": 2.896,
+      "greedy_answer": "no",
+      "greedy_em": 1.0,
+      "greedy_f1": 1.0,
+      "sampled_answers": [
+        "no",
+        "no",
+        "no",
+        "no",
+        "no"
+      ],
+      "sampled_em": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sampled_f1": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sampled_f1_mean": 1.0,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.79249,
+      "gold_prob_per_token": 0.79249
+    },
+    {
+      "query_index": 13,
+      "id": "5ab56e32554299637185c594",
+      "type": "comparison",
+      "question": "Are Random House Tower and 888 7th Avenue both used for real estate?",
+      "gold": "no",
+      "target_rate": 0.5,
+      "context_tokens": 468,
+      "full_context_tokens": 2745,
+      "actual_ratio": 5.865,
+      "greedy_answer": "no",
+      "greedy_em": 1.0,
+      "greedy_f1": 1.0,
+      "sampled_answers": [
+        "no",
+        "no",
+        "no",
+        "no",
+        "no"
+      ],
+      "sampled_em": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sampled_f1": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sampled_f1_mean": 1.0,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.99395,
+      "gold_prob_per_token": 0.99395
+    },
+    {
+      "query_index": 13,
+      "id": "5ab56e32554299637185c594",
+      "type": "comparison",
+      "question": "Are Random House Tower and 888 7th Avenue both used for real estate?",
+      "gold": "no",
+      "target_rate": 0.33,
+      "context_tokens": 335,
+      "full_context_tokens": 2745,
+      "actual_ratio": 8.194,
+      "greedy_answer": "no",
+      "greedy_em": 1.0,
+      "greedy_f1": 1.0,
+      "sampled_answers": [
+        "no",
+        "no",
+        "no",
+        "no",
+        "no"
+      ],
+      "sampled_em": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sampled_f1": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sampled_f1_mean": 1.0,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.99871,
+      "gold_prob_per_token": 0.99871
+    },
+    {
+      "query_index": 14,
+      "id": "5ab6d09255429954757d337d",
+      "type": "bridge",
+      "question": "The football manager who recruited David Beckham managed Manchester United during what timeframe?",
+      "gold": "from 1986 to 2013",
+      "target_rate": 1.0,
+      "context_tokens": 1023,
+      "full_context_tokens": 1023,
+      "actual_ratio": 1.0,
+      "greedy_answer": "1945 to 1969",
+      "greedy_em": 0.0,
+      "greedy_f1": 0.2857,
+      "sampled_answers": [
+        "1945 to 1969",
+        "1945 to 1969",
+        "1945 to 1969",
+        "1945 to 1969",
+        "1945 to 1969"
+      ],
+      "sampled_em": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1": [
+        0.2857,
+        0.2857,
+        0.2857,
+        0.2857,
+        0.2857
+      ],
+      "sampled_f1_mean": 0.2857,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 1e-05,
+      "gold_prob_per_token": 0.36922
+    },
+    {
+      "query_index": 14,
+      "id": "5ab6d09255429954757d337d",
+      "type": "bridge",
+      "question": "The football manager who recruited David Beckham managed Manchester United during what timeframe?",
+      "gold": "from 1986 to 2013",
+      "target_rate": 0.8,
+      "context_tokens": 800,
+      "full_context_tokens": 1023,
+      "actual_ratio": 1.279,
+      "greedy_answer": "1986 to 2013",
+      "greedy_em": 0.0,
+      "greedy_f1": 0.8571,
+      "sampled_answers": [
+        "1986 to 2013",
+        "1986 to 2013",
+        "1986 to 2013",
+        "1986 to 2013",
+        "1986 to 2013"
+      ],
+      "sampled_em": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1": [
+        0.8571,
+        0.8571,
+        0.8571,
+        0.8571,
+        0.8571
+      ],
+      "sampled_f1_mean": 0.8571,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.00086,
+      "gold_prob_per_token": 0.55505
+    },
+    {
+      "query_index": 14,
+      "id": "5ab6d09255429954757d337d",
+      "type": "bridge",
+      "question": "The football manager who recruited David Beckham managed Manchester United during what timeframe?",
+      "gold": "from 1986 to 2013",
+      "target_rate": 0.5,
+      "context_tokens": 404,
+      "full_context_tokens": 1023,
+      "actual_ratio": 2.532,
+      "greedy_answer": "1986-2013",
+      "greedy_em": 0.0,
+      "greedy_f1": 0.0,
+      "sampled_answers": [
+        "1996-2013",
+        "1996-2013",
+        "1986-2013",
+        "1986-2013",
+        "1986-2013"
+      ],
+      "sampled_em": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1_mean": 0.0,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.0,
+      "gold_prob_per_token": 0.17029
+    },
+    {
+      "query_index": 14,
+      "id": "5ab6d09255429954757d337d",
+      "type": "bridge",
+      "question": "The football manager who recruited David Beckham managed Manchester United during what timeframe?",
+      "gold": "from 1986 to 2013",
+      "target_rate": 0.33,
+      "context_tokens": 279,
+      "full_context_tokens": 1023,
+      "actual_ratio": 3.667,
+      "greedy_answer": "1986-2013",
+      "greedy_em": 0.0,
+      "greedy_f1": 0.0,
+      "sampled_answers": [
+        "1986-2013",
+        "1986-2013",
+        "1986-2013",
+        "1986-2013",
+        "1986-2013"
+      ],
+      "sampled_em": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1_mean": 0.0,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.0,
+      "gold_prob_per_token": 0.16471
+    },
+    {
+      "query_index": 15,
+      "id": "5a75e05c55429976ec32bc5f",
+      "type": "bridge",
+      "question": "Brown State Fishing Lake is in a country that has a population of how many inhabitants ?",
+      "gold": "9,984",
+      "target_rate": 1.0,
+      "context_tokens": 1623,
+      "full_context_tokens": 1623,
+      "actual_ratio": 1.0,
+      "greedy_answer": "United States",
+      "greedy_em": 0.0,
+      "greedy_f1": 0.0,
+      "sampled_answers": [
+        "United States",
+        "no",
+        "United States",
+        "no",
+        "United States"
+      ],
+      "sampled_em": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1_mean": 0.0,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.00463,
+      "gold_prob_per_token": 0.34131
+    },
+    {
+      "query_index": 15,
+      "id": "5a75e05c55429976ec32bc5f",
+      "type": "bridge",
+      "question": "Brown State Fishing Lake is in a country that has a population of how many inhabitants ?",
+      "gold": "9,984",
+      "target_rate": 0.8,
+      "context_tokens": 1239,
+      "full_context_tokens": 1623,
+      "actual_ratio": 1.31,
+      "greedy_answer": "no",
+      "greedy_em": 0.0,
+      "greedy_f1": 0.0,
+      "sampled_answers": [
+        "no",
+        "no",
+        "no",
+        "no",
+        "no"
+      ],
+      "sampled_em": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1_mean": 0.0,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.01099,
+      "gold_prob_per_token": 0.4057
+    },
+    {
+      "query_index": 15,
+      "id": "5a75e05c55429976ec32bc5f",
+      "type": "bridge",
+      "question": "Brown State Fishing Lake is in a country that has a population of how many inhabitants ?",
+      "gold": "9,984",
+      "target_rate": 0.5,
+      "context_tokens": 623,
+      "full_context_tokens": 1623,
+      "actual_ratio": 2.605,
+      "greedy_answer": "no",
+      "greedy_em": 0.0,
+      "greedy_f1": 0.0,
+      "sampled_answers": [
+        "Canada",
+        "no",
+        "Canada",
+        "no",
+        "no"
+      ],
+      "sampled_em": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1_mean": 0.0,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.00015,
+      "gold_prob_per_token": 0.17175
+    },
+    {
+      "query_index": 15,
+      "id": "5a75e05c55429976ec32bc5f",
+      "type": "bridge",
+      "question": "Brown State Fishing Lake is in a country that has a population of how many inhabitants ?",
+      "gold": "9,984",
+      "target_rate": 0.33,
+      "context_tokens": 438,
+      "full_context_tokens": 1623,
+      "actual_ratio": 3.705,
+      "greedy_answer": "no",
+      "greedy_em": 0.0,
+      "greedy_f1": 0.0,
+      "sampled_answers": [
+        "no",
+        "no",
+        "9,984",
+        "no",
+        "9,984"
+      ],
+      "sampled_em": [
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        1.0
+      ],
+      "sampled_f1": [
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        1.0
+      ],
+      "sampled_f1_mean": 0.4,
+      "sampled_f1_std": 0.4899,
+      "gold_prob": 0.70792,
+      "gold_prob_per_token": 0.93325
+    },
+    {
+      "query_index": 16,
+      "id": "5ab3e45655429976abd1bcd4",
+      "type": "bridge",
+      "question": "The Vermont Catamounts men's soccer team currently competes in a conference that was formerly known as what from 1988 to 1996?",
+      "gold": "the North Atlantic Conference",
+      "target_rate": 1.0,
+      "context_tokens": 1395,
+      "full_context_tokens": 1395,
+      "actual_ratio": 1.0,
+      "greedy_answer": "North Atlantic Conference",
+      "greedy_em": 1.0,
+      "greedy_f1": 1.0,
+      "sampled_answers": [
+        "North Atlantic Conference",
+        "North Atlantic Conference",
+        "North Atlantic Conference",
+        "North Atlantic Conference",
+        "North Atlantic Conference"
+      ],
+      "sampled_em": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sampled_f1": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sampled_f1_mean": 1.0,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.00061,
+      "gold_prob_per_token": 0.15689
+    },
+    {
+      "query_index": 16,
+      "id": "5ab3e45655429976abd1bcd4",
+      "type": "bridge",
+      "question": "The Vermont Catamounts men's soccer team currently competes in a conference that was formerly known as what from 1988 to 1996?",
+      "gold": "the North Atlantic Conference",
+      "target_rate": 0.8,
+      "context_tokens": 988,
+      "full_context_tokens": 1395,
+      "actual_ratio": 1.412,
+      "greedy_answer": "Eastern College Athletic Conference-North",
+      "greedy_em": 0.0,
+      "greedy_f1": 0.0,
+      "sampled_answers": [
+        "Eastern College Athletic Conference-North",
+        "Eastern College Athletic Conference-North",
+        "Eastern College Athletic Conference-North",
+        "Eastern College Athletic Conference-North",
+        "Eastern College Athletic Conference-North"
+      ],
+      "sampled_em": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1_mean": 0.0,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.0,
+      "gold_prob_per_token": 0.03877
+    },
+    {
+      "query_index": 16,
+      "id": "5ab3e45655429976abd1bcd4",
+      "type": "bridge",
+      "question": "The Vermont Catamounts men's soccer team currently competes in a conference that was formerly known as what from 1988 to 1996?",
+      "gold": "the North Atlantic Conference",
+      "target_rate": 0.5,
+      "context_tokens": 485,
+      "full_context_tokens": 1395,
+      "actual_ratio": 2.876,
+      "greedy_answer": "America East Conference",
+      "greedy_em": 0.0,
+      "greedy_f1": 0.3333,
+      "sampled_answers": [
+        "America East Conference",
+        "America East Conference",
+        "America East Conference",
+        "America East Conference",
+        "America East Conference"
+      ],
+      "sampled_em": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1": [
+        0.3333,
+        0.3333,
+        0.3333,
+        0.3333,
+        0.3333
+      ],
+      "sampled_f1_mean": 0.3333,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.0,
+      "gold_prob_per_token": 0.00063
+    },
+    {
+      "query_index": 16,
+      "id": "5ab3e45655429976abd1bcd4",
+      "type": "bridge",
+      "question": "The Vermont Catamounts men's soccer team currently competes in a conference that was formerly known as what from 1988 to 1996?",
+      "gold": "the North Atlantic Conference",
+      "target_rate": 0.33,
+      "context_tokens": 316,
+      "full_context_tokens": 1395,
+      "actual_ratio": 4.415,
+      "greedy_answer": "America East Conference",
+      "greedy_em": 0.0,
+      "greedy_f1": 0.3333,
+      "sampled_answers": [
+        "America East Conference",
+        "America East Conference",
+        "America East Conference",
+        "America East Conference",
+        "America East Conference"
+      ],
+      "sampled_em": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1": [
+        0.3333,
+        0.3333,
+        0.3333,
+        0.3333,
+        0.3333
+      ],
+      "sampled_f1_mean": 0.3333,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.0,
+      "gold_prob_per_token": 0.00123
+    },
+    {
+      "query_index": 17,
+      "id": "5ab29c24554299449642c932",
+      "type": "comparison",
+      "question": "Are Giuseppe Verdi and Ambroise Thomas both Opera composers ?",
+      "gold": "yes",
+      "target_rate": 1.0,
+      "context_tokens": 1433,
+      "full_context_tokens": 1433,
+      "actual_ratio": 1.0,
+      "greedy_answer": "yes",
+      "greedy_em": 1.0,
+      "greedy_f1": 1.0,
+      "sampled_answers": [
+        "yes",
+        "yes",
+        "yes",
+        "yes",
+        "yes"
+      ],
+      "sampled_em": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sampled_f1": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sampled_f1_mean": 1.0,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.99986,
+      "gold_prob_per_token": 0.99986
+    },
+    {
+      "query_index": 17,
+      "id": "5ab29c24554299449642c932",
+      "type": "comparison",
+      "question": "Are Giuseppe Verdi and Ambroise Thomas both Opera composers ?",
+      "gold": "yes",
+      "target_rate": 0.8,
+      "context_tokens": 1055,
+      "full_context_tokens": 1433,
+      "actual_ratio": 1.358,
+      "greedy_answer": "yes",
+      "greedy_em": 1.0,
+      "greedy_f1": 1.0,
+      "sampled_answers": [
+        "yes",
+        "yes",
+        "yes",
+        "yes",
+        "yes"
+      ],
+      "sampled_em": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sampled_f1": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sampled_f1_mean": 1.0,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.99982,
+      "gold_prob_per_token": 0.99982
+    },
+    {
+      "query_index": 17,
+      "id": "5ab29c24554299449642c932",
+      "type": "comparison",
+      "question": "Are Giuseppe Verdi and Ambroise Thomas both Opera composers ?",
+      "gold": "yes",
+      "target_rate": 0.5,
+      "context_tokens": 507,
+      "full_context_tokens": 1433,
+      "actual_ratio": 2.826,
+      "greedy_answer": "yes",
+      "greedy_em": 1.0,
+      "greedy_f1": 1.0,
+      "sampled_answers": [
+        "yes",
+        "yes",
+        "yes",
+        "yes",
+        "yes"
+      ],
+      "sampled_em": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sampled_f1": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sampled_f1_mean": 1.0,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.99868,
+      "gold_prob_per_token": 0.99868
+    },
+    {
+      "query_index": 17,
+      "id": "5ab29c24554299449642c932",
+      "type": "comparison",
+      "question": "Are Giuseppe Verdi and Ambroise Thomas both Opera composers ?",
+      "gold": "yes",
+      "target_rate": 0.33,
+      "context_tokens": 352,
+      "full_context_tokens": 1433,
+      "actual_ratio": 4.071,
+      "greedy_answer": "yes",
+      "greedy_em": 1.0,
+      "greedy_f1": 1.0,
+      "sampled_answers": [
+        "yes",
+        "yes",
+        "yes",
+        "yes",
+        "yes"
+      ],
+      "sampled_em": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sampled_f1": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "sampled_f1_mean": 1.0,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.99908,
+      "gold_prob_per_token": 0.99908
+    },
+    {
+      "query_index": 18,
+      "id": "5ae0d4c9554299603e418468",
+      "type": "bridge",
+      "question": "Roger O. Egeberg was Assistant Secretary for Health and Scientific Affairs during the administration of a president that served during what years?",
+      "gold": "1969 until 1974",
+      "target_rate": 1.0,
+      "context_tokens": 1754,
+      "full_context_tokens": 1754,
+      "actual_ratio": 1.0,
+      "greedy_answer": "1969-1974",
+      "greedy_em": 0.0,
+      "greedy_f1": 0.0,
+      "sampled_answers": [
+        "1969-1974",
+        "1969-1974",
+        "1969-1974",
+        "1969-1974",
+        "1969-1974"
+      ],
+      "sampled_em": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1_mean": 0.0,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.0,
+      "gold_prob_per_token": 0.27747
+    },
+    {
+      "query_index": 18,
+      "id": "5ae0d4c9554299603e418468",
+      "type": "bridge",
+      "question": "Roger O. Egeberg was Assistant Secretary for Health and Scientific Affairs during the administration of a president that served during what years?",
+      "gold": "1969 until 1974",
+      "target_rate": 0.8,
+      "context_tokens": 1320,
+      "full_context_tokens": 1754,
+      "actual_ratio": 1.329,
+      "greedy_answer": "1969-1974",
+      "greedy_em": 0.0,
+      "greedy_f1": 0.0,
+      "sampled_answers": [
+        "1969-1974",
+        "1969-1974",
+        "1969-1974",
+        "1969-1974",
+        "1969-1974"
+      ],
+      "sampled_em": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1_mean": 0.0,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.0,
+      "gold_prob_per_token": 0.07108
+    },
+    {
+      "query_index": 18,
+      "id": "5ae0d4c9554299603e418468",
+      "type": "bridge",
+      "question": "Roger O. Egeberg was Assistant Secretary for Health and Scientific Affairs during the administration of a president that served during what years?",
+      "gold": "1969 until 1974",
+      "target_rate": 0.5,
+      "context_tokens": 574,
+      "full_context_tokens": 1754,
+      "actual_ratio": 3.056,
+      "greedy_answer": "1969-1974",
+      "greedy_em": 0.0,
+      "greedy_f1": 0.0,
+      "sampled_answers": [
+        "1969-1974",
+        "1969-1974",
+        "1969-1974",
+        "1969-1974",
+        "1969-1974"
+      ],
+      "sampled_em": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1_mean": 0.0,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.0,
+      "gold_prob_per_token": 0.09662
+    },
+    {
+      "query_index": 18,
+      "id": "5ae0d4c9554299603e418468",
+      "type": "bridge",
+      "question": "Roger O. Egeberg was Assistant Secretary for Health and Scientific Affairs during the administration of a president that served during what years?",
+      "gold": "1969 until 1974",
+      "target_rate": 0.33,
+      "context_tokens": 394,
+      "full_context_tokens": 1754,
+      "actual_ratio": 4.452,
+      "greedy_answer": "1953-1961",
+      "greedy_em": 0.0,
+      "greedy_f1": 0.0,
+      "sampled_answers": [
+        "1953-1961",
+        "1953-1961",
+        "1953-1961",
+        "1953-1961",
+        "1953-1961"
+      ],
+      "sampled_em": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1_mean": 0.0,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.0,
+      "gold_prob_per_token": 0.04358
+    },
+    {
+      "query_index": 19,
+      "id": "5a8133725542995ce29dcbdb",
+      "type": "comparison",
+      "question": "Which writer was from England, Henry Roth or Robert Erskine Childers?",
+      "gold": "Robert Erskine Childers DSC",
+      "target_rate": 1.0,
+      "context_tokens": 1008,
+      "full_context_tokens": 1008,
+      "actual_ratio": 1.0,
+      "greedy_answer": "Robert Erskine Childers",
+      "greedy_em": 0.0,
+      "greedy_f1": 0.8571,
+      "sampled_answers": [
+        "Robert Erskine Childers",
+        "Robert Erskine Childers",
+        "Robert Erskine Childers",
+        "Robert Erskine Childers",
+        "Robert Erskine Childers"
+      ],
+      "sampled_em": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1": [
+        0.8571,
+        0.8571,
+        0.8571,
+        0.8571,
+        0.8571
+      ],
+      "sampled_f1_mean": 0.8571,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.0,
+      "gold_prob_per_token": 0.02885
+    },
+    {
+      "query_index": 19,
+      "id": "5a8133725542995ce29dcbdb",
+      "type": "comparison",
+      "question": "Which writer was from England, Henry Roth or Robert Erskine Childers?",
+      "gold": "Robert Erskine Childers DSC",
+      "target_rate": 0.8,
+      "context_tokens": 748,
+      "full_context_tokens": 1008,
+      "actual_ratio": 1.348,
+      "greedy_answer": "Robert Erskine Childers",
+      "greedy_em": 0.0,
+      "greedy_f1": 0.8571,
+      "sampled_answers": [
+        "Robert Erskine Childers",
+        "Robert Erskine Childers",
+        "Robert Erskine Childers",
+        "Robert Erskine Childers",
+        "Robert Erskine Childers"
+      ],
+      "sampled_em": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1": [
+        0.8571,
+        0.8571,
+        0.8571,
+        0.8571,
+        0.8571
+      ],
+      "sampled_f1_mean": 0.8571,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.0,
+      "gold_prob_per_token": 0.02537
+    },
+    {
+      "query_index": 19,
+      "id": "5a8133725542995ce29dcbdb",
+      "type": "comparison",
+      "question": "Which writer was from England, Henry Roth or Robert Erskine Childers?",
+      "gold": "Robert Erskine Childers DSC",
+      "target_rate": 0.5,
+      "context_tokens": 374,
+      "full_context_tokens": 1008,
+      "actual_ratio": 2.695,
+      "greedy_answer": "Robert Erskine Childers",
+      "greedy_em": 0.0,
+      "greedy_f1": 0.8571,
+      "sampled_answers": [
+        "Robert Erskine Childers",
+        "Robert Erskine Childers",
+        "Robert Erskine Childers",
+        "Robert Erskine Childers",
+        "Robert Erskine Childers"
+      ],
+      "sampled_em": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1": [
+        0.8571,
+        0.8571,
+        0.8571,
+        0.8571,
+        0.8571
+      ],
+      "sampled_f1_mean": 0.8571,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.0,
+      "gold_prob_per_token": 0.0067
+    },
+    {
+      "query_index": 19,
+      "id": "5a8133725542995ce29dcbdb",
+      "type": "comparison",
+      "question": "Which writer was from England, Henry Roth or Robert Erskine Childers?",
+      "gold": "Robert Erskine Childers DSC",
+      "target_rate": 0.33,
+      "context_tokens": 251,
+      "full_context_tokens": 1008,
+      "actual_ratio": 4.016,
+      "greedy_answer": "Robert Erskine Childers",
+      "greedy_em": 0.0,
+      "greedy_f1": 0.8571,
+      "sampled_answers": [
+        "Robert Erskine Childers",
+        "Robert Erskine Childers",
+        "Robert Erskine Childers",
+        "Robert Erskine Childers",
+        "Robert Erskine Childers"
+      ],
+      "sampled_em": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sampled_f1": [
+        0.8571,
+        0.8571,
+        0.8571,
+        0.8571,
+        0.8571
+      ],
+      "sampled_f1_mean": 0.8571,
+      "sampled_f1_std": 0.0,
+      "gold_prob": 0.0,
+      "gold_prob_per_token": 0.00652
+    }
+  ]
+}
