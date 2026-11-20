@@ -17,11 +17,18 @@ REPO = "https://github.com/Othmane197/Prompt-Compression-for-LLM-s.git"
 # significant gap, 2x slower) -> 3B kept.
 # (3) stability pilot with the 3B -> results/pilot_3b.json.
 # (4) same pilot with the full-precision 7B on 2 x T4 -> results/pilot_7b.json.
-# Current step: screening with the 7B on a first batch of 100 queries (no compression, greedy),
-# to measure runtime and the share of queries answered correctly at 1x.
+# (5) screening, 7B, queries 0-99 -> results/screen_7b_000_099.json: 72/100 usable, ~7 s/answer.
+# Current step: dataset run.
+#   a) screen queries 100-449 (no compression, greedy)
+#   b) main run: first 300 usable queries x 8 compression levels, greedy only (sampling was
+#      shown to add little run-to-run variability). Estimated ~5 h on 2 x T4.
 RUNS = [
-    ["--n-queries", "100", "--rates", "1.0", "--samples", "0",
-     "--reader", "Qwen/Qwen2.5-7B-Instruct", "--multi-gpu", "--out", "/kaggle/working/screen_7b_100"],
+    ["--offset", "100", "--n-queries", "350", "--rates", "1.0", "--samples", "0",
+     "--reader", "Qwen/Qwen2.5-7B-Instruct", "--multi-gpu", "--out", "/kaggle/working/screen_7b_100_449"],
+    ["--screen-file", "/kaggle/working/repo/results/screen_7b_000_099.json",
+     "/kaggle/working/screen_7b_100_449.json", "--n-queries", "300",
+     "--rates", "1.0", "0.9", "0.8", "0.65", "0.5", "0.4", "0.3", "0.2", "--samples", "0",
+     "--reader", "Qwen/Qwen2.5-7B-Instruct", "--multi-gpu", "--out", "/kaggle/working/dataset_7b"],
 ]
 
 

@@ -148,8 +148,8 @@ def main():
     ap.add_argument("--compressor", default="microsoft/llmlingua-2-xlm-roberta-large-meetingbank")
     ap.add_argument("--n-queries", type=int, default=20)
     ap.add_argument("--offset", type=int, default=0, help="first HotpotQA validation index to use")
-    ap.add_argument("--screen-file", default=None,
-                    help="JSON of a previous rate-1.0 run: keep only queries answered correctly at 1x")
+    ap.add_argument("--screen-file", nargs="+", default=None,
+                    help="JSON(s) of previous rate-1.0 runs: keep only queries answered correctly at 1x")
     ap.add_argument("--screen-min-f1", type=float, default=0.5,
                     help="F1 threshold at 1x for --screen-file (default 0.5)")
     ap.add_argument("--rates", type=float, nargs="+", default=[1.0, 0.8, 0.5, 0.33],
@@ -174,11 +174,12 @@ def main():
         # Keep only queries the reader answers correctly WITHOUT compression in a previous
         # (cheap, rate-1.0-only) screening run: queries already wrong at 1x carry no
         # information about the tolerable compression ratio.
-        screen = json.load(open(args.screen_file, encoding="utf-8"))["rows"]
+        screen = [r for p in args.screen_file for r in json.load(open(p, encoding="utf-8"))["rows"]]
         ids = sorted({r["query_index"] for r in screen
                       if r["target_rate"] == 1.0 and r["greedy_f1"] >= args.screen_min_f1})
+        print(f"Screening files {args.screen_file}: {len(screen)} queries screened, {len(ids)} kept "
+              f"(F1 at 1x >= {args.screen_min_f1}); using the first {min(len(ids), args.n_queries)}")
         ids = ids[: args.n_queries]
-        print(f"Screening file {args.screen_file}: {len(ids)} queries kept (F1 at 1x >= {args.screen_min_f1})")
         ds = datasets.load_dataset("hotpotqa/hotpot_qa", "distractor", split="validation").select(ids)
     else:
         ids = list(range(args.offset, args.offset + args.n_queries))
