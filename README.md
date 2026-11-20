@@ -28,6 +28,7 @@ statistically established at this sample size.
 |---|---|
 | `pilot_map_stability.py` | Main experiment: compress each query at several rates (LLMLingua-2), let a reader LLM answer (greedy + sampled), score EM/F1 and gold-answer probability, record actual ratios. |
 | `plot_results.py` | Figures (mean map, query × ratio heatmap, per-query curves) and comparison of label rules for the "max safe ratio". `python plot_results.py [--greedy] [--show]` |
+| `train_estimator.py` | Baseline estimator: labels (max safe ratio, first-failure rule), query embedding (bge-small) + Ridge vs constant ratio, cross-validation by query; reports safety and mean compression applied. |
 | `kaggle/pilot/` | Kaggle runner (T4 GPU) for the pilot. Edit `RUNS` in `run_pilot.py` to change the experiment. |
 | `benchmark_hotpotqa.py` | Earlier compression-only benchmark (no reader, lexical proxies). |
 | `results/` | Raw JSON outputs of all runs reported in RESULTS.md. |
