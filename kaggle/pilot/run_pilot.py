@@ -16,12 +16,12 @@ REPO = "https://github.com/Othmane197/Prompt-Compression-for-LLM-s.git"
 # 20 queries: Qwen2.5-3B EM 0.40 / F1 0.50 vs Qwen2.5-7B-4bit EM 0.45 / F1 0.54 (not a
 # significant gap, 2x slower) -> 3B kept.
 # (3) stability pilot with the 3B -> results/pilot_3b.json.
-# Current step: same pilot (same 20 queries, same rates, same deterministic compression) with
-# the full-precision 7B split over the 2 T4s, to check whether the per-query jumps persist
-# with a stronger reader.
+# (4) same pilot with the full-precision 7B on 2 x T4 -> results/pilot_7b.json.
+# Current step: screening with the 7B on a first batch of 100 queries (no compression, greedy),
+# to measure runtime and the share of queries answered correctly at 1x.
 RUNS = [
-    ["--n-queries", "20", "--samples", "5", "--reader", "Qwen/Qwen2.5-7B-Instruct",
-     "--multi-gpu", "--out", "/kaggle/working/pilot_7b"],
+    ["--n-queries", "100", "--rates", "1.0", "--samples", "0",
+     "--reader", "Qwen/Qwen2.5-7B-Instruct", "--multi-gpu", "--out", "/kaggle/working/screen_7b_100"],
 ]
 
 
