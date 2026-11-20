@@ -5,8 +5,15 @@ Research project — CentraleSupélec × Manifold Technology (supervisor: Yannic
 **Question:** how much can a given LLM prompt (instructions + context + question) be compressed
 before the LLM's answer degrades — and can we predict that compression ratio per prompt?
 
-**Current step:** build a dataset mapping *(prompt, compression ratio) → answer quality* and
-measure how stable those measurements are, as a basis for training a per-prompt ratio estimator.
+**Status:** pilot done (20 HotpotQA queries, 4 ratios, Qwen2.5-3B and 7B readers) — see RESULTS.md.
+
+**Next steps**
+1. Fix the target reader (labels are reader-specific).
+2. Screening run: rate 1.0 only on ~600 queries; keep queries answered correctly without compression.
+3. Dataset run: ~300 screened queries × 8 compression levels, greedy answers only
+   (run-to-run variability was measured as small).
+4. Labels ("max safe ratio", first-failure rule) and estimator baseline: query embedding + Ridge,
+   compared to a constant-ratio baseline, train/test split by query.
 
 ## Results
 

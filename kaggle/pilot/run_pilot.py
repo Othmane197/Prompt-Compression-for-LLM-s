@@ -39,3 +39,8 @@ for args in RUNS:
     # check=False: a failing run must not prevent the next one
     print("+", "pilot", " ".join(args), flush=True)
     subprocess.run([sys.executable, "/kaggle/working/repo/pilot_map_stability.py", *args])
+    # Figures for this run, visible in the notebook's Output tab (a failure here is harmless).
+    out = args[args.index("--out") + 1]
+    if os.path.exists(out + ".json"):
+        subprocess.run([sys.executable, "/kaggle/working/repo/plot_results.py", out + ".json",
+                        "--out", out + "_figures"])

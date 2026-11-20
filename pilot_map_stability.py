@@ -148,6 +148,10 @@ def main():
     ap.add_argument("--compressor", default="microsoft/llmlingua-2-xlm-roberta-large-meetingbank")
     ap.add_argument("--n-queries", type=int, default=20)
     ap.add_argument("--offset", type=int, default=0, help="first HotpotQA validation index to use")
+    ap.add_argument("--screen-file", default=None,
+                    help="JSON of a previous rate-1.0 run: keep only queries answered correctly at 1x")
+    ap.add_argument("--screen-min-f1", type=float, default=0.5,
+                    help="F1 threshold at 1x for --screen-file (default 0.5)")
     ap.add_argument("--rates", type=float, nargs="+", default=[1.0, 0.8, 0.5, 0.33],
                     help="LLMLingua-2 target rates (fraction of tokens kept). 1.0 = no compression.")
     ap.add_argument("--samples", type=int, default=5, help="sampled answers per (query, rate)")
@@ -166,8 +170,20 @@ def main():
 
     # "hotpotqa/hotpot_qa" is the official parquet version: works with any `datasets` version
     # (the old "hotpot_qa" loading script is not supported by datasets>=4, e.g. on Colab).
-    ds = datasets.load_dataset("hotpotqa/hotpot_qa", "distractor",
-                               split=f"validation[{args.offset}:{args.offset + args.n_queries}]")
+    if args.screen_file:
+        # Keep only queries the reader answers correctly WITHOUT compression in a previous
+        # (cheap, rate-1.0-only) screening run: queries already wrong at 1x carry no
+        # information about the tolerable compression ratio.
+        screen = json.load(open(args.screen_file, encoding="utf-8"))["rows"]
+        ids = sorted({r["query_index"] for r in screen
+                      if r["target_rate"] == 1.0 and r["greedy_f1"] >= args.screen_min_f1})
+        ids = ids[: args.n_queries]
+        print(f"Screening file {args.screen_file}: {len(ids)} queries kept (F1 at 1x >= {args.screen_min_f1})")
+        ds = datasets.load_dataset("hotpotqa/hotpot_qa", "distractor", split="validation").select(ids)
+    else:
+        ids = list(range(args.offset, args.offset + args.n_queries))
+        ds = datasets.load_dataset("hotpotqa/hotpot_qa", "distractor",
+                                   split=f"validation[{args.offset}:{args.offset + args.n_queries}]")
 
     # ---------------------------------------------------------------- phase 1: compress everything
     # Done first, then the compressor is freed, so the reader can use the whole GPU (float32).
@@ -213,7 +229,7 @@ def main():
             sampled_em = [exact_match(a, s["answer"]) for a in sampled]
 
             rows.append({
-                "query_index": args.offset + qi,
+                "query_index": ids[qi],
                 "id": s["id"],
                 "type": s["type"],
                 "question": s["question"],
