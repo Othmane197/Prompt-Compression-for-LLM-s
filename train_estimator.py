@@ -10,6 +10,8 @@ Steps :
      [embedding(question), mean of embedding(each document)]  -> 2 x 384 numbers.
   3. Models (formulation (a) of the supervisor: query -> max safe ratio), target = log2(ratio):
        - constant baseline : always predict the median training label
+       - question-type baseline : median training label of the same HotpotQA type
+         (bridge / comparison; a dataset annotation, not available as-is in deployment)
        - Ridge regression on the embedding
   4. Evaluation with cross-validation split BY QUERY (a query is never in train and test).
      Besides the regression error, we report what matters in practice: compress each test
@@ -51,7 +53,7 @@ def build_labels(rows, tolerance, min_baseline):
             if not o:
                 break
             label = ratio
-        data.append({"query_index": q, "question": rs[0]["question"],
+        data.append({"query_index": q, "question": rs[0]["question"], "type": rs[0].get("type"),
                      "ratios": ratios, "ok": ok, "label": label})
     return data
 
@@ -122,16 +124,21 @@ def main():
     print(f"Features: {X.shape[1]} dimensions ({args.embedder})")
 
     k = min(args.folds, n)
-    pred_const, pred_ridge = np.zeros(n), np.zeros(n)
+    qtype = np.array([d["type"] for d in data])
+    pred_const, pred_type, pred_ridge = np.zeros(n), np.zeros(n), np.zeros(n)
     for train, test in KFold(n_splits=k, shuffle=True, random_state=args.seed).split(X):
         pred_const[test] = np.median(y[train])
+        for t in set(qtype[test]):  # median label of the training queries of the same HotpotQA type
+            same = train[qtype[train] == t]
+            pred_type[test[qtype[test] == t]] = np.median(y[same]) if len(same) else np.median(y[train])
         model = Ridge(alpha=args.alpha).fit(X[train], y[train])
         pred_ridge[test] = model.predict(X[test])
 
     print(f"\nCross-validation by query ({k} folds). Target = log2(max safe ratio).")
     print(f"{'model':<22} | {'MAE (log2)':>10} | {'safety':>7} | {'mean ratio applied':>18}")
     print("-" * 66)
-    for name, pred in [("constant (median)", pred_const), ("Ridge on embedding", pred_ridge)]:
+    for name, pred in [("constant (median)", pred_const), ("question type (median)", pred_type),
+                       ("Ridge on embedding", pred_ridge)]:
         mae = np.mean(np.abs(pred - y))
         outcomes = [apply_ratio(d, 2 ** p) for d, p in zip(data, pred)]
         safety = np.mean([o for o, _ in outcomes])

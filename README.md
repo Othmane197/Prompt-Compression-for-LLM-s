@@ -5,22 +5,23 @@ Research project — CentraleSupélec × Manifold Technology (supervisor: Yannic
 **Question:** how much can a given LLM prompt (instructions + context + question) be compressed
 before the LLM's answer degrades — and can we predict that compression ratio per prompt?
 
-**Status:** pilot done (20 HotpotQA queries, 4 ratios, Qwen2.5-3B and 7B readers) — see RESULTS.md.
+**Status:** dataset of 300 HotpotQA queries × 8 compression ratios (Qwen2.5-7B reader) and first
+estimator baselines done — see RESULTS.md §0.
 
 **Next steps**
-1. Fix the target reader (labels are reader-specific).
-2. Screening run: rate 1.0 only on ~600 queries; keep queries answered correctly without compression.
-3. Dataset run: ~300 screened queries × 8 compression levels, greedy answers only
-   (run-to-run variability was measured as small).
-4. Labels ("max safe ratio", first-failure rule) and estimator baseline: query embedding + Ridge,
-   compared to a constant-ratio baseline, train/test split by query.
+1. Make the estimator beat the simple baselines: Ridge on a generic embedding ties with a constant
+   ratio, while the question type alone beats it. Try formulation (b) ((query, ratio) → OK / not OK,
+   classifier), question-only embeddings, tuned regularization, simple features (context length).
+2. Decide with the supervisor: target reader, label rule (64/300 curves recover after a failure),
+   acceptable loss.
 
 ## Results
 
-See **[RESULTS.md](RESULTS.md)**. In short (pilot, 20 HotpotQA queries, Qwen2.5-3B reader):
-run-to-run variability of the reader is small, but per-query performance is **not monotonic**
-in the compression ratio (compression sometimes helps), and the average degradation is not yet
-statistically established at this sample size.
+See **[RESULTS.md](RESULTS.md)**. In short (300 HotpotQA queries, Qwen2.5-7B reader): mean F1 falls
+from 0.93 (1×, screened queries) to 0.60 at ~2.9× and 0.35 at ~8×; the tolerable ratio varies
+widely across queries (1× to >8×). A constant ratio keeps 70% of answers at 2.0×; predicting by
+question type gives 73% at 2.6×; Ridge on a query embedding does not beat the constant; an oracle
+would reach 100% at 3.85×.
 
 ## Repository
 

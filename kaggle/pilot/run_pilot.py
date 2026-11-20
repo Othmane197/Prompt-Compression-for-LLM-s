@@ -18,7 +18,8 @@ REPO = "https://github.com/Othmane197/Prompt-Compression-for-LLM-s.git"
 # (3) stability pilot with the 3B -> results/pilot_3b.json.
 # (4) same pilot with the full-precision 7B on 2 x T4 -> results/pilot_7b.json.
 # (5) screening, 7B, queries 0-99 -> results/screen_7b_000_099.json: 72/100 usable, ~7 s/answer.
-# Current step: dataset run.
+# (6) dataset run -> results/screen_7b_100_449.json (258/350 usable) and results/dataset_7b.json
+#     (300 queries x 8 rates, ~3.5 h). RUNS below is that last run.
 #   a) screen queries 100-449 (no compression, greedy)
 #   b) main run: first 300 usable queries x 8 compression levels, greedy only (sampling was
 #      shown to add little run-to-run variability). Estimated ~5 h on 2 x T4.

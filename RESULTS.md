@@ -1,9 +1,65 @@
 # Results
 
 Measured results only. Every number below can be recomputed from the JSON files in [`results/`](results/).
-Sample sizes are small: these are **pilot** results, not conclusions.
+§0 uses 300 queries; §1–3 are 20-query (or 10-query) **pilots**, indicative only.
 
 ---
+
+## 0. Dataset run: 300 queries × 8 compression levels, and the first estimator (main result)
+
+**Setup:** HotpotQA (distractor, validation) · reader Qwen2.5-7B-Instruct (float16, 2 × T4) ·
+compressor LLMLingua-2 `xlm-roberta-large-meetingbank` (documents only) · greedy answers only.
+1. *Screening:* queries 0–449 at rate 1.0 (no compression); keep F1 ≥ 0.5 → 330/450 usable
+   (`results/screen_7b_000_099.json`, `results/screen_7b_100_449.json`).
+2. *Dataset:* the first 300 usable queries (239 bridge, 61 comparison) × 8 target rates
+   (`results/dataset_7b.json`, 2,400 answers, ~3.5 h on Kaggle). Uncompressed answers are
+   identical to the screening run for 300/300 queries (greedy decoding is reproducible).
+
+| Target rate | 1.0 | 0.9 | 0.8 | 0.65 | 0.5 | 0.4 | 0.3 | 0.2 |
+|---|---|---|---|---|---|---|---|---|
+| Actual ratio (median) | 1.00× | 1.25× | 1.39× | 1.96× | 2.92× | 3.62× | 5.55× | 8.12× |
+| Actual ratio (range) | – | 1.13–3.36 | 1.24–3.70 | 1.62–4.51 | 2.12–7.40 | 2.60–8.81 | 3.80–11.56 | 5.39–18.50 |
+| Greedy EM | 0.79 | 0.69 | 0.64 | 0.61 | 0.44 | 0.41 | 0.32 | 0.23 |
+| Greedy F1 | 0.93 | 0.83 | 0.79 | 0.76 | 0.60 | 0.54 | 0.45 | 0.35 |
+
+F1 at 1× is high **by construction** (screened queries); the table measures degradation on queries
+the reader can answer, not overall reader accuracy.
+
+**Labels** (max safe ratio, first-failure rule, tolerance 0.05 F1): median 2.48×, range 1.00–14.37×.
+38/300 queries already fail at the first compression level; 68/300 never fail (label = highest
+ratio measured, i.e. **right-censored**). 64/300 queries fail at some level and recover at a
+higher one, so the first-failure rule is conservative for them.
+Comparison questions tolerate much more compression than bridge questions (median label 7.1×
+vs 2.1×), including comparison questions with a span answer (7.4×, n = 35), so this is not just
+yes/no guessing.
+
+**Estimator** — formulation (a): query → max safe ratio. 5-fold cross-validation split by query;
+the predicted ratio is snapped down to a measured ratio and applied to the test query.
+Script: `python train_estimator.py results/dataset_7b.json`.
+
+| Policy | MAE (log2) | Safety | Mean ratio applied |
+|---|---|---|---|
+| Constant (median training label) | 1.003 | 70% | 2.01× |
+| Question type (median label per HotpotQA type) | 0.913 | 73% | 2.56× |
+| Ridge on bge-small embedding (question + mean of documents) | 0.991 | 66% | 2.31× |
+| Oracle (each query at its own label) | 0 | 100% | 3.85× |
+
+For reference, one fixed target rate for all queries: rate 0.65 → 75% safe at 2.01×;
+rate 0.5 → 55% safe at 2.99×.
+
+**Findings**
+
+1. **The Ridge-on-embedding baseline does not beat the constant.** Its MAE is equal (0.99 vs
+   1.00) and it only moves along the safety/compression trade-off (66% at 2.31× vs 70% at 2.01×),
+   which a fixed rate does as well.
+2. **A one-bit feature does beat it:** predicting by question type gives +0.5× compression and
+   +3 points of safety (stable over 3 CV seeds: 72–73% at 2.54–2.56× vs 69–71% at 2.01–2.03×).
+   The safety gain is within noise at n = 300; the compression gain is clear. The type is a dataset
+   annotation, but comparison questions are recognisable from their wording.
+   → The signal exists; the generic embedding + Ridge setup fails to extract it.
+3. **Large headroom:** the oracle reaches 3.85× at 100% safety; the best baseline 2.56× at 73%.
+
+## Earlier pilots
 
 ## 1. Stability pilot: reader performance vs compression (main result)
 
@@ -93,6 +149,8 @@ appears anywhere in the compressed text, which overestimates both retention rate
 
 ## Known limitations
 
-- Small samples (20 and 10 queries); single dataset (HotpotQA); single compressor family.
+- §0: 300 queries, one reader (Qwen2.5-7B), one dataset (HotpotQA), one compressor family; labels are
+  reader-specific and right-censored at the highest measured ratio for 68/300 queries.
+- §1–3: small samples (20 and 10 queries).
 - Official EM/F1 normalization penalizes format differences ("1969-1974" vs "1969 until 1974" → F1 = 0).
 - Results are specific to the reader model and decoding settings listed above.
